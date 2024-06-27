@@ -21,8 +21,10 @@ public class Tile : MonoBehaviour
             string[] tileCoordinates = this.gameObject.name.Split(',');
             int x = int.Parse(tileCoordinates[0]);
             int y = int.Parse(tileCoordinates[1]);
-            gameManager.UpdateRoad(x, y);
+
+            gameManager.ChangeTile(x, y);
             Debug.Log($"{x}, {y}");
+
         }
     }
 }

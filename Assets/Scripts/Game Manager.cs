@@ -54,9 +54,9 @@ public class GameManager : MonoBehaviour
     private void GenerateGrid ()
     {
         int counter = 0;
-        for (int x = 0; x < this.Width; x++)
+        for (int y = 0; y < this.Height; y++)
         {
-            for (int y = 0; y < this.Height; y++)
+            for (int x = 0; x < this.Width; x++)
             {
                 Tiles.Add(Instantiate(tilePrefab, new Vector2(x, -y), Quaternion.identity));
                 Tiles[counter].name = $"{x},{y}";
@@ -64,6 +64,43 @@ public class GameManager : MonoBehaviour
             }
         }
         cameraTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -(float)Height / 2 + 0.5f, -10);
+    }
+
+    public void ChangeTile (int x, int y)
+    {
+        UpdateRoad(x, y);
+        if (y + 1 < this.Height) // Up + y
+        {
+            TileType tileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            if (tileType == TileType.Road)
+            {
+                UpdateRoad(x, y + 1);
+            }
+        }
+        if (x + 1 < this.Width) // Right + x
+        {
+            TileType tileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
+            if (tileType == TileType.Road)
+            {
+                UpdateRoad(x + 1, y);
+            }
+        }
+        if (y - 1 >= 0) // Down - y
+        {
+            TileType tileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            if (tileType == TileType.Road)
+            {
+                UpdateRoad(x, y - 1);
+            }
+        }
+        if (x - 1 >= 0) // Left - x
+        {
+            TileType tileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
+            if (tileType == TileType.Road)
+            {
+                UpdateRoad(x - 1, y);
+            }
+        }
     }
 
     public void UpdateRoad (int x, int y)
@@ -74,7 +111,7 @@ public class GameManager : MonoBehaviour
 
         int rotationIndex = 1;
 
-        if (y < this.Height) // Up + y
+        if (y + 1 < this.Height) // Up + y
         {
             TileType tileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
             if (tileType == TileType.Road)
@@ -83,7 +120,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Up: " + tileType);
             }
         }
-        if (x < this.Width) // Right + x
+        if (x + 1 < this.Width) // Right + x
         {
             TileType tileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
             if (tileType == TileType.Road)
@@ -92,7 +129,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Right: " + tileType);
             }
         }
-        if (y < this.Height) // Down - y
+        if (y - 1 >= 0) // Down - y
         {
             TileType tileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
             if (tileType == TileType.Road)
@@ -101,7 +138,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Down: " + tileType);
             }
         }
-        if (x < this.Width) // Left - x
+        if (x - 1 >= 0) // Left - x
         {
             TileType tileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
             if (tileType == TileType.Road)
@@ -115,22 +152,15 @@ public class GameManager : MonoBehaviour
         {
             if (item.Key == rotationIndex)
             {
-                Debug.Log(item.Value.x.ToString() + ", " + item.Value.y.ToString() + ", " + item.Value.z.ToString());
+                //Debug.Log(item.Value.x.ToString() + ", " + item.Value.y.ToString() + ", " + item.Value.z.ToString());
                 rotation = item.Value;
             }
         }
-
+        
         Transform tileTransform = Tiles[(y * this.Width) + x].transform;
 
         foreach(Transform childTranform in tileTransform.transform)
         {
-            /*
-            // Reset the rotations
-            childTranform.transform.eulerAngles = new Vector3 (0f, 0f, 0f);
-            tileTransform.transform.eulerAngles = new Vector3 (-0f, 0f, 0f);
-            */
-
-            // Set new rotations
             childTranform.transform.eulerAngles = new Vector2(rotation.x, rotation.y);
             tileTransform.transform.eulerAngles = new Vector3(0f, 0f, rotation.z);
         }
