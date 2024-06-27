@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] GameManager gameManager;
+
+    [SerializeField] public TileType tileType;
+
     void Start()
     {
-        
+        GameObject gameManagerFind = GameObject.Find("Game Manager");
+        gameManager = gameManagerFind.GetComponent<GameManager>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnMouseDown()
     {
-        
+        if (Input.GetMouseButtonDown(0)) // Left Click
+        {
+            string[] tileCoordinates = this.gameObject.name.Split(',');
+            int x = int.Parse(tileCoordinates[0]);
+            int y = int.Parse(tileCoordinates[1]);
+            gameManager.UpdateRoad(x, y);
+            Debug.Log($"{x}, {y}");
+        }
     }
 }
