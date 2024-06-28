@@ -64,6 +64,8 @@ public class GameManager : MonoBehaviour
             }
         }
         cameraTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -(float)Height / 2 + 0.5f, -10);
+
+        Debug.Log(Tiles.Count);
     }
 
     public void ChangeTile (int x, int y)
@@ -105,19 +107,21 @@ public class GameManager : MonoBehaviour
 
     public void UpdateRoad (int x, int y)
     {
+        Debug.Log($"{x}, {y}");
+
         ChangeTileType(TileType.Road, x, y);
 
         Vector3 rotation = new Vector3(0, 0, 0);
 
         int rotationIndex = 1;
 
-        if (y + 1 < this.Height) // Up + y
+        if (y - 1 >= 0) // Up - y
         {
-            TileType tileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            TileType tileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
             if (tileType == TileType.Road)
             {
                 rotationIndex *= 2;
-                Debug.Log("Up: " + tileType);
+                //Debug.Log("Up: " + tileType);
             }
         }
         if (x + 1 < this.Width) // Right + x
@@ -126,16 +130,16 @@ public class GameManager : MonoBehaviour
             if (tileType == TileType.Road)
             {
                 rotationIndex *= 3;
-                Debug.Log("Right: " + tileType);
+                //Debug.Log("Right: " + tileType);
             }
         }
-        if (y - 1 >= 0) // Down - y
+        if (y + 1 < this.Height) // Down + y
         {
-            TileType tileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            TileType tileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
             if (tileType == TileType.Road)
             {
                 rotationIndex *= 4;
-                Debug.Log("Down: " + tileType);
+                //Debug.Log("Down: " + tileType);
             }
         }
         if (x - 1 >= 0) // Left - x
@@ -144,7 +148,7 @@ public class GameManager : MonoBehaviour
             if (tileType == TileType.Road)
             {
                 rotationIndex *= 5;
-                Debug.Log("Left: " + tileType);
+                //Debug.Log("Left: " + tileType);
             }
         }
 
@@ -161,9 +165,14 @@ public class GameManager : MonoBehaviour
 
         foreach(Transform childTranform in tileTransform.transform)
         {
+            childTranform.transform.eulerAngles = new Vector3 (0, 0, 0);
+            tileTransform.transform.eulerAngles = new Vector3(0, 0, 0);
+
             childTranform.transform.eulerAngles = new Vector2(rotation.x, rotation.y);
             tileTransform.transform.eulerAngles = new Vector3(0f, 0f, rotation.z);
         }
+
+        Debug.Log($"Road Updated to {Tiles[(y * this.Width) + x]} at {x}, {y}");
     }
 
     private void ChangeTileType(TileType tileType, int x, int y)
