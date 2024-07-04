@@ -2,21 +2,51 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Linq;
+
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private string LevelName = "Test";
     [SerializeField] private int Width, Height;
+    [SerializeField] private string SavePath = @"C:\Users\badgo\Documents\Levels\Test.txt";
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private Transform levelViewTransform;
     [SerializeField] private List<GameObject> Tiles;
     [SerializeField] private Dictionary<int, Vector3> RoadRotations;
+    [SerializeField] private Dictionary<Vector2, int> RoadOrientations;
     [SerializeField] private TileType selectedTileType;
 
     void Start()
     {
         Tiles = new List<GameObject>();
+        RoadOrientations = new Dictionary<Vector2, int>();
         GenerateGrid();
         InstantiateRoadRotations();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveLevel();
+    }
+
+    private void SaveLevel()
+    {
+        File.WriteAllText(SavePath, "");
+        File.AppendAllText(SavePath, LevelName + "\r\n");
+        File.AppendAllText(SavePath, Width.ToString() + "," + Height.ToString() + "\r\n");
+
+        for (int y = 0; y < this.Height; y++)
+        {
+            for (int x = 0; x < this.Width; x++)
+            {
+                TileType tileType = Tiles[(y * this.Width) + x].GetComponent<Tile>().tileType;
+                int orientation = RoadOrientations.Single(v => v.Key == new Vector2(x, y)).Value;
+
+                File.AppendAllText(SavePath, tileType.ToString() + "/" + orientation.ToString() + ",");
+            }
+        }
     }
 
     private void InstantiateRoadRotations ()
@@ -61,6 +91,7 @@ public class GameManager : MonoBehaviour
             {
                 Tiles.Add(Instantiate(tilePrefab, new Vector2(x, -y), Quaternion.identity));
                 Tiles[counter].name = $"{x},{y}";
+                RoadOrientations.Add(new Vector2(x, y), 0);
                 counter++;
             }
         }
@@ -74,13 +105,13 @@ public class GameManager : MonoBehaviour
         if (selectedTileType == TileType.Grass)
         {
             ChangeTileType(selectedTileType, x, y);
-            ChangeTileOrientation(x, y, new Vector3(0, 0, 0));
+            ChangeTileOrientation(x, y, 0, new Vector3(0, 0, 0));
             return;
         }
         else if (selectedTileType == TileType.Building)
         {
             ChangeTileType(selectedTileType, x, y);
-            ChangeTileOrientation(x, y, new Vector3(180, 0, 0));
+            ChangeTileOrientation(x, y, 0, new Vector3(180, 0, 0));
             return;
         }
         
@@ -159,15 +190,18 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        int key = 0;
+
         foreach (KeyValuePair<int, Vector3> item in RoadRotations)
         {
             if (item.Key == rotationIndex)
             {
                 rotation = item.Value;
+                key = item.Key;
             }
         }
 
-        ChangeTileOrientation(x, y, rotation);
+        ChangeTileOrientation(x, y, key,  rotation);
     }
 
     private void ChangeTileType(TileType tileType, int x, int y)
@@ -177,9 +211,12 @@ public class GameManager : MonoBehaviour
         tileComponent.tileType = tileType;
     }
 
-    private void ChangeTileOrientation (int x, int y, Vector3 rotation)
+    private void ChangeTileOrientation (int x, int y, int key, Vector3 rotation)
     {
         Transform tileTransform = Tiles[(y * this.Width) + x].transform;
+
+        RoadOrientations[new Vector2(x, y)] = key;
+
 
         foreach (Transform childTranform in tileTransform.transform)
         {
