@@ -22,9 +22,10 @@ public class GameManager : MonoBehaviour
     {
         Tiles = new List<GameObject>();
         RoadOrientations = new Dictionary<Vector2, int>();
-        GenerateGrid();
+        //GenerateGrid();
         InstantiateRoadRotations();
-        
+        LoadLevel();
+
         if (!File.Exists(SavePath))
         {
             File.WriteAllText(SavePath, "");
@@ -35,7 +36,7 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveLevel();
+        //SaveLevel();
     }
 
     private void SaveLevel()
@@ -59,7 +60,66 @@ public class GameManager : MonoBehaviour
 
     private void LoadLevel()
     {
-        
+        string[] levelData = File.ReadAllLines(SavePath);
+
+        this.LevelName = levelData[0];
+        this.Width = int.Parse(levelData[1].Split(",")[0]);
+        this.Width = int.Parse(levelData[1].Split(",")[1]);
+
+        int counter = 0;
+        for (int y = 0; y < this.Height; y++)
+        {
+            string[] rowContents = levelData[y + 2].Split(",");
+
+            foreach (string rowContent in rowContents)
+                Debug.Log(rowContent);
+
+            for (int x = 0; x < this.Width; x++)
+            {
+                string[] tileContents = rowContents[x].Split("/");
+
+                Debug.Log(tileContents[0] + tileContents[1]);
+
+                Tiles.Add(Instantiate(tilePrefab, new Vector2(x, -y), Quaternion.identity));
+                Tiles[counter].name = $"{x},{y}";
+
+                TileType tileType = new TileType();
+
+                switch (tileContents[0])
+                {
+                    case "Grass":
+                        tileType = TileType.Grass;
+                        break;
+                    case "Building":
+                        tileType = TileType.Building;
+                        break;
+                    case "Road":
+                        tileType = TileType.Road;
+                        break;
+                };
+
+                Tiles[counter].GetComponent<Tile>().tileType = tileType;
+
+                RoadOrientations.Add(new Vector2(x, y), int.Parse(tileContents[1]));               
+
+                if (tileType == TileType.Grass)
+                {
+                    ChangeTileOrientation(x, y, 0, new Vector3(0, 0, 0));
+                }
+                else if (tileType == TileType.Building)
+                {
+                    ChangeTileOrientation(x, y, 0, new Vector3(180, 0, 0));
+                }
+                else if (tileType == TileType.Road)
+                {
+                    Vector3 rotation = RoadRotations.Single(v => v.Key == int.Parse(tileContents[1])).Value;
+                    ChangeTileOrientation(x, y, int.Parse(tileContents[1]), rotation);
+                }
+
+                counter++;
+            }
+        }
+        levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
     }
 
     private void InstantiateRoadRotations ()

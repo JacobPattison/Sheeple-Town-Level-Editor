@@ -1,6 +1,6 @@
 Test
 4,4
+Road/3,Road/15,Road/15,Road/5,
+Building/0,Building/0,Building/0,Building/0,
 Grass/0,Grass/0,Grass/0,Grass/0,
-Grass/0,Road/12,Road/20,Grass/0,
-Grass/0,Road/6,Road/10,Grass/0,
 Grass/0,Grass/0,Grass/0,Grass/0,
