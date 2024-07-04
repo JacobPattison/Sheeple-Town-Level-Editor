@@ -24,7 +24,6 @@ public class Tile : MonoBehaviour
 
             gameManager.ChangeTile(x, y);
             Debug.Log($"{x}, {y}");
-
         }
     }
 }

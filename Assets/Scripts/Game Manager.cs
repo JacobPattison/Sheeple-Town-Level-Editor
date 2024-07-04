@@ -8,51 +8,68 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private string LevelName = "Test";
-    [SerializeField] private int Width, Height;
-    private string SavePath = Application.dataPath + "/Levels/Test.txt";
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private Transform levelViewTransform;
     [SerializeField] private List<GameObject> Tiles;
-    [SerializeField] private Dictionary<int, Vector3> RoadRotations;
-    [SerializeField] private Dictionary<Vector2, int> RoadOrientations;
-    [SerializeField] private TileType selectedTileType;
+
+    private string LevelName = "Test";
+    private int Width = 17, Height = 7;
+    private string SavePath = Application.dataPath + "/Levels/Test.txt";
+
+    private Dictionary<int, Vector3> RoadRotations;
+    private Dictionary<Vector2, int> RoadOrientations;
+    private TileType selectedTileType;
+
+    #region Unity
 
     void Start()
     {
         Tiles = new List<GameObject>();
         RoadOrientations = new Dictionary<Vector2, int>();
-        //GenerateGrid();
+
+        // Create preset rotations for the 3D Tile Object
         InstantiateRoadRotations();
-        LoadLevel();
 
-        if (!File.Exists(SavePath))
+        // If theres a level load it, if not create one
+        /*
+        if (File.Exists(SavePath))
         {
-            File.WriteAllText(SavePath, "");
+            LoadLevel();
         }
+        else
+        {
+            GenerateGrid();
+        }
+        */
 
-        Debug.Log(SavePath);
+        GenerateGrid();
     }
 
     private void OnApplicationQuit()
     {
-        //SaveLevel();
+        SaveLevel();
     }
+
+    #endregion
+
+    #region File Handling
 
     private void SaveLevel()
     {
+        // Saves name and dimentions
         File.WriteAllText(SavePath, "");
         File.AppendAllText(SavePath, LevelName + "\r\n");
         File.AppendAllText(SavePath, Width.ToString() + "," + Height.ToString() + "\r\n");
 
+        // Saves each tile in "Type/Oriention" format with "," as seperator
         for (int y = 0; y < this.Height; y++)
         {
             for (int x = 0; x < this.Width; x++)
             {
-                TileType tileType = Tiles[(y * this.Width) + x].GetComponent<Tile>().tileType;
-                int orientation = RoadOrientations.Single(v => v.Key == new Vector2(x, y)).Value;
+                TileType currentTileType = Tiles[(y * this.Width) + x].GetComponent<Tile>().tileType;
+                int currentOrientation = RoadOrientations.Single(v => v.Key == new Vector2(x, y)).Value;
 
-                File.AppendAllText(SavePath, tileType.ToString() + "/" + orientation.ToString() + ",");
+                File.AppendAllText(SavePath, currentTileType.ToString() + "/" + currentOrientation.ToString() + ",");
             }
             File.AppendAllText(SavePath, "\r\n");
         }
@@ -62,67 +79,219 @@ public class GameManager : MonoBehaviour
     {
         string[] levelData = File.ReadAllLines(SavePath);
 
+        // Assign name and dimentions
         this.LevelName = levelData[0];
         this.Width = int.Parse(levelData[1].Split(",")[0]);
         this.Width = int.Parse(levelData[1].Split(",")[1]);
 
-        int counter = 0;
+        // Read rest of file which the data for the tiles
+        int listIndex = 0;
         for (int y = 0; y < this.Height; y++)
         {
-            string[] rowContents = levelData[y + 2].Split(",");
-
-            foreach (string rowContent in rowContents)
-                Debug.Log(rowContent);
+            string[] rowData = levelData[y + 2].Split(",");
 
             for (int x = 0; x < this.Width; x++)
             {
-                string[] tileContents = rowContents[x].Split("/");
-
-                Debug.Log(tileContents[0] + tileContents[1]);
+                string[] tileData = rowData[x].Split("/");
 
                 Tiles.Add(Instantiate(tilePrefab, new Vector2(x, -y), Quaternion.identity));
-                Tiles[counter].name = $"{x},{y}";
+                Tiles[listIndex].name = $"{x},{y}";
 
-                TileType tileType = new TileType();
-
-                switch (tileContents[0])
+                TileType currentTileType = new TileType();
+                switch (tileData[0])
                 {
                     case "Grass":
-                        tileType = TileType.Grass;
+                        currentTileType = TileType.Grass;
                         break;
                     case "Building":
-                        tileType = TileType.Building;
+                        currentTileType = TileType.Building;
                         break;
                     case "Road":
-                        tileType = TileType.Road;
+                        currentTileType = TileType.Road;
                         break;
                 };
 
-                Tiles[counter].GetComponent<Tile>().tileType = tileType;
+                Tiles[listIndex].GetComponent<Tile>().tileType = currentTileType;
 
-                RoadOrientations.Add(new Vector2(x, y), int.Parse(tileContents[1]));               
+                RoadOrientations.Add(new Vector2(x, y), int.Parse(tileData[1]));               
 
-                if (tileType == TileType.Grass)
+                if (currentTileType == TileType.Grass)
                 {
                     ChangeTileOrientation(x, y, 0, new Vector3(0, 0, 0));
                 }
-                else if (tileType == TileType.Building)
+                else if (currentTileType == TileType.Building)
                 {
                     ChangeTileOrientation(x, y, 0, new Vector3(180, 0, 0));
                 }
-                else if (tileType == TileType.Road)
+                else if (currentTileType == TileType.Road)
                 {
-                    Vector3 rotation = RoadRotations.Single(v => v.Key == int.Parse(tileContents[1])).Value;
-                    ChangeTileOrientation(x, y, int.Parse(tileContents[1]), rotation);
+                    Vector3 roadRotation = RoadRotations.Single(v => v.Key == int.Parse(tileData[1])).Value;
+                    ChangeTileOrientation(x, y, int.Parse(tileData[1]), roadRotation);
                 }
 
-                counter++;
+                listIndex++;
             }
         }
+
         levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
     }
 
-    private void InstantiateRoadRotations ()
+    #endregion
+
+    #region Tile Changing
+
+    public void ChangeTile (int x, int y)
+    {
+        // If placing tile is not a road tile, change it then return
+        if (selectedTileType == TileType.Grass)
+        {
+            ChangeTileType(selectedTileType, x, y);
+            ChangeTileOrientation(x, y, 0, new Vector3(0, 0, 0));
+            return;
+        }
+        else if (selectedTileType == TileType.Building)
+        {
+            ChangeTileType(selectedTileType, x, y);
+            ChangeTileOrientation(x, y, 0, new Vector3(180, 0, 0));
+            return;
+        }
+        
+        UpdateRoad(x, y);
+        TileType neighbouringTileType;
+
+        // Checks each neighbouring tile veritcally and horizontically, if its a road then update it
+        if (y + 1 < this.Height) // Up + y
+        {
+            neighbouringTileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                UpdateRoad(x, y + 1);
+            }
+        }
+        if (x + 1 < this.Width) // Right + x
+        {
+            neighbouringTileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                UpdateRoad(x + 1, y);
+            }
+        }
+        if (y - 1 >= 0) // Down - y
+        {
+            neighbouringTileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                UpdateRoad(x, y - 1);
+            }
+        }
+        if (x - 1 >= 0) // Left - x
+        {
+            neighbouringTileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                UpdateRoad(x - 1, y);
+            }
+        }
+    }
+
+    public void UpdateRoad (int x, int y)
+    {
+        ChangeTileType(TileType.Road, x, y);
+        Vector3 rotation = new Vector3(0, 0, 0);
+
+        int rotationIndex = 1;
+        TileType neighbouringTileType;
+
+        // Check neighbouring tiles, multiply rotation index accordingly
+        if (y - 1 >= 0) // Up - y
+        {
+            neighbouringTileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                rotationIndex *= 2;
+            }
+        }
+        if (x + 1 < this.Width) // Right + x
+        {
+            neighbouringTileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                rotationIndex *= 3;
+            }
+        }
+        if (y + 1 < this.Height) // Down + y
+        {
+            neighbouringTileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                rotationIndex *= 4;
+            }
+        }
+        if (x - 1 >= 0) // Left - x
+        {
+            neighbouringTileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
+            if (neighbouringTileType == TileType.Road)
+            {
+                rotationIndex *= 5;
+            }
+        }
+
+        int key = 0;
+        foreach (KeyValuePair<int, Vector3> item in RoadRotations)
+        {
+            if (item.Key == rotationIndex)
+            {
+                rotation = item.Value;
+                key = item.Key;
+            }
+        }
+
+        ChangeTileOrientation(x, y, key,  rotation);
+    }
+
+    private void ChangeTileType(TileType tileType, int x, int y)
+    {
+        int listIndex = y * this.Width + x;
+        Tile tileComponent = Tiles[listIndex].GetComponent<Tile>();
+        tileComponent.tileType = tileType;
+    }
+
+    private void ChangeTileOrientation (int x, int y, int key, Vector3 rotation)
+    {
+        RoadOrientations[new Vector2(x, y)] = key;
+
+        Transform tileTransform = Tiles[(y * this.Width) + x].transform;
+
+        // Reset 3D tile rotation, apply x,y rotation on 3D, apply z rotation on 2D
+        foreach (Transform childTranform in tileTransform.transform)
+        {
+            childTranform.transform.eulerAngles = new Vector3(0, 0, 0);
+            tileTransform.transform.eulerAngles = new Vector3(0, 0, 0);
+
+            childTranform.transform.eulerAngles = new Vector2(rotation.x, rotation.y);
+            tileTransform.transform.eulerAngles = new Vector3(0f, 0f, rotation.z);
+        }
+    }
+
+    public void ChangeSelectedTileType(int type)
+    {
+        switch (type)
+        {
+            case 0:
+                this.selectedTileType = TileType.Grass;
+                return;
+            case 1:
+                this.selectedTileType = TileType.Building;
+                return;
+            case 2:
+                this.selectedTileType = TileType.Road;
+                return;
+        };
+    }
+
+    #endregion
+
+    private void InstantiateRoadRotations()
     {
         RoadRotations = new Dictionary<int, Vector3>();
 
@@ -155,163 +324,22 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void GenerateGrid ()
+    private void GenerateGrid()
     {
-        int counter = 0;
+        // Generates grid of grass tile
+        int listIndex = 0;
         for (int y = 0; y < this.Height; y++)
         {
             for (int x = 0; x < this.Width; x++)
             {
                 Tiles.Add(Instantiate(tilePrefab, new Vector2(x, -y), Quaternion.identity));
-                Tiles[counter].name = $"{x},{y}";
+
+                Tiles[listIndex].name = $"{x},{y}";
                 RoadOrientations.Add(new Vector2(x, y), 0);
-                counter++;
+
+                listIndex++;
             }
         }
         levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
-    }
-
-    public void ChangeTile (int x, int y)
-    {
-        if (selectedTileType == TileType.Grass)
-        {
-            ChangeTileType(selectedTileType, x, y);
-            ChangeTileOrientation(x, y, 0, new Vector3(0, 0, 0));
-            return;
-        }
-        else if (selectedTileType == TileType.Building)
-        {
-            ChangeTileType(selectedTileType, x, y);
-            ChangeTileOrientation(x, y, 0, new Vector3(180, 0, 0));
-            return;
-        }
-        
-        UpdateRoad(x, y);
-        if (y + 1 < this.Height) // Up + y
-        {
-            TileType tileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                UpdateRoad(x, y + 1);
-            }
-        }
-        if (x + 1 < this.Width) // Right + x
-        {
-            TileType tileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                UpdateRoad(x + 1, y);
-            }
-        }
-        if (y - 1 >= 0) // Down - y
-        {
-            TileType tileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                UpdateRoad(x, y - 1);
-            }
-        }
-        if (x - 1 >= 0) // Left - x
-        {
-            TileType tileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                UpdateRoad(x - 1, y);
-            }
-        }
-    }
-
-    public void UpdateRoad (int x, int y)
-    {
-        Debug.Log($"{x}, {y}");
-
-        ChangeTileType(TileType.Road, x, y);
-        Vector3 rotation = new Vector3(0, 0, 0);
-        int rotationIndex = 1;
-        if (y - 1 >= 0) // Up - y
-        {
-            TileType tileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                rotationIndex *= 2;
-            }
-        }
-        if (x + 1 < this.Width) // Right + x
-        {
-            TileType tileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                rotationIndex *= 3;
-            }
-        }
-        if (y + 1 < this.Height) // Down + y
-        {
-            TileType tileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                rotationIndex *= 4;
-            }
-        }
-        if (x - 1 >= 0) // Left - x
-        {
-            TileType tileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
-            if (tileType == TileType.Road)
-            {
-                rotationIndex *= 5;
-            }
-        }
-
-        int key = 0;
-
-        foreach (KeyValuePair<int, Vector3> item in RoadRotations)
-        {
-            if (item.Key == rotationIndex)
-            {
-                rotation = item.Value;
-                key = item.Key;
-            }
-        }
-
-        ChangeTileOrientation(x, y, key,  rotation);
-    }
-
-    private void ChangeTileType(TileType tileType, int x, int y)
-    {
-        int listIndex = y * this.Width + x;
-        Tile tileComponent = Tiles[listIndex].GetComponent<Tile>();
-        tileComponent.tileType = tileType;
-    }
-
-    private void ChangeTileOrientation (int x, int y, int key, Vector3 rotation)
-    {
-        Transform tileTransform = Tiles[(y * this.Width) + x].transform;
-
-        RoadOrientations[new Vector2(x, y)] = key;
-
-
-        foreach (Transform childTranform in tileTransform.transform)
-        {
-            childTranform.transform.eulerAngles = new Vector3(0, 0, 0);
-            tileTransform.transform.eulerAngles = new Vector3(0, 0, 0);
-
-            childTranform.transform.eulerAngles = new Vector2(rotation.x, rotation.y);
-            tileTransform.transform.eulerAngles = new Vector3(0f, 0f, rotation.z);
-        }
-    }
-
-    public void ChangeSelectedTileType(int type)
-    {
-        switch (type)
-        {
-            case 0:
-                this.selectedTileType = TileType.Grass;
-                return;
-            case 1:
-                this.selectedTileType = TileType.Building;
-                return;
-            case 2:
-                this.selectedTileType = TileType.Road;
-                return;
-        };
     }
 }
