@@ -1248,8 +1248,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7785b2251407561439d992f0ffb72c51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 17
-  Height: 8
+  LevelName: Test
+  Width: 4
+  Height: 4
+  SavePath: C:\Users\badgo\Documents\Unity\Sheeple Town Level Editor\Levels
   tilePrefab: {fileID: 539024065477212030, guid: ad0f90aa63c24644a93423068aa9968e, type: 3}
   levelViewTransform: {fileID: 1533384090}
   Tiles: []

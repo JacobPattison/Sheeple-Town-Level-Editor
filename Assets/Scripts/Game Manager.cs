@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private string LevelName = "Test";
     [SerializeField] private int Width, Height;
-    [SerializeField] private string SavePath = @"C:\Users\badgo\Documents\Levels\Test.txt";
+    private string SavePath = Application.dataPath + "/Levels/Test.txt";
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private Transform levelViewTransform;
     [SerializeField] private List<GameObject> Tiles;
@@ -24,6 +24,13 @@ public class GameManager : MonoBehaviour
         RoadOrientations = new Dictionary<Vector2, int>();
         GenerateGrid();
         InstantiateRoadRotations();
+        
+        if (!File.Exists(SavePath))
+        {
+            File.WriteAllText(SavePath, "");
+        }
+
+        Debug.Log(SavePath);
     }
 
     private void OnApplicationQuit()
@@ -46,7 +53,13 @@ public class GameManager : MonoBehaviour
 
                 File.AppendAllText(SavePath, tileType.ToString() + "/" + orientation.ToString() + ",");
             }
+            File.AppendAllText(SavePath, "\r\n");
         }
+    }
+
+    private void LoadLevel()
+    {
+        
     }
 
     private void InstantiateRoadRotations ()
@@ -96,8 +109,6 @@ public class GameManager : MonoBehaviour
             }
         }
         levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
-
-        Debug.Log(Tiles.Count);
     }
 
     public void ChangeTile (int x, int y)
