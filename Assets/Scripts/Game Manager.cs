@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 
 public class GameManager : MonoBehaviour
@@ -290,6 +291,16 @@ public class GameManager : MonoBehaviour
                 this.selectedTileType = TileType.Road;
                 return;
         };
+    }
+
+    #endregion
+
+    #region UI
+
+    public void ReturnToLevelSelector ()
+    {
+        SaveLevel();
+        SceneManager.LoadScene("LevelSelector");
     }
 
     #endregion
