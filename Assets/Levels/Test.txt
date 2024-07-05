@@ -1,9 +1,9 @@
 Test
-17,7
-Grass/0,Road/12,Road/15,Road/15,Road/20,Building/0,Building/0,Building/0,Building/0,Road/12,Road/15,Road/15,Road/15,Road/20,Building/0,Road/4,Grass/0,
-Grass/0,Road/8,Building/0,Building/0,Road/8,Building/0,Road/12,Road/15,Road/15,Road/40,Building/0,Building/0,Building/0,Road/6,Road/60,Road/10,Grass/0,
-Grass/0,Road/8,Building/0,Building/0,Road/24,Road/15,Road/40,Building/0,Building/0,Road/24,Road/15,Road/20,Building/0,Building/0,Road/8,Grass/0,Grass/0,
-Road/3,Road/40,Building/0,Road/12,Road/10,Building/0,Road/8,Building/0,Road/12,Road/10,Building/0,Road/24,Road/15,Road/15,Road/40,Grass/0,Grass/0,
-Grass/0,Road/8,Building/0,Road/8,Building/0,Building/0,Road/6,Road/60,Road/10,Building/0,Building/0,Road/8,Building/0,Building/0,Road/24,Road/15,Road/5,
-Grass/0,Road/8,Building/0,Road/8,Building/0,Building/0,Building/0,Road/8,Building/0,Building/0,Road/12,Road/10,Building/0,Road/12,Road/10,Grass/0,Grass/0,
-Grass/0,Road/6,Road/15,Road/30,Road/15,Road/15,Road/15,Road/30,Road/15,Road/15,Road/10,Building/0,Building/0,Road/2,Grass/0,Grass/0,Grass/0,
+7,7
+Grass/0,Road/12,Road/15,Road/15,Road/20,Building/0,Building/0,
+Grass/0,Road/8,Building/0,Building/0,Road/8,Building/0,Road/12,
+Grass/0,Road/8,Building/0,Building/0,Road/24,Road/15,Road/40,
+Road/3,Road/40,Building/0,Road/12,Road/10,Building/0,Road/8,
+Grass/0,Road/8,Building/0,Road/8,Building/0,Building/0,Road/6,
+Grass/0,Road/8,Building/0,Road/8,Building/0,Building/0,Building/0,
+Grass/0,Road/6,Road/15,Road/30,Road/15,Road/15,Road/15,

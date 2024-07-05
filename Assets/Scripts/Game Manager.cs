@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     private string LevelName = "Test";
     private int Width = 17, Height = 7;
-    private string SavePath = Application.dataPath + "/Levels/Test.txt";
+    private string SavePath;
 
     private Dictionary<int, Vector3> RoadRotations;
     private Dictionary<Vector2, int> RoadOrientations;
@@ -27,11 +27,17 @@ public class GameManager : MonoBehaviour
         Tiles = new List<GameObject>();
         RoadOrientations = new Dictionary<Vector2, int>();
 
+        if (PlayerPrefs.HasKey("SavePath"))
+        {
+            SavePath = PlayerPrefs.GetString("SavePath");
+            Debug.Log("Save path loaded: " + SavePath);
+        }
+
         // Create preset rotations for the 3D Tile Object
         InstantiateRoadRotations();
 
         // If theres a level load it, if not create one
-        /*
+        
         if (File.Exists(SavePath))
         {
             LoadLevel();
@@ -40,11 +46,6 @@ public class GameManager : MonoBehaviour
         {
             GenerateGrid();
         }
-        */
-
-        
-
-        GenerateGrid();
     }
 
     private void OnApplicationQuit()
