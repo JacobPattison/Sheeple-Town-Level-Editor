@@ -7,12 +7,18 @@ using System.Linq;
 public class LevelSelector : MonoBehaviour
 {
     [SerializeField] private GameObject LevelPrefab;
+    [SerializeField] private GameObject NewLevelPrefab;
     [SerializeField] private List<GameObject> LevelList;
     [SerializeField] private RectTransform LevelsTransform;
 
     private string LevelDirectory = Application.dataPath + "/Levels";
 
     void Start()
+    {
+        LoadLevels();
+    }
+
+    private void LoadLevels()
     {
         string[] allPaths = Directory.GetFiles(LevelDirectory); // Gets all files, including meta files
         string[] levelPaths = allPaths.Where(s => s.EndsWith(".txt")).ToArray(); // Takes only the .txt files from all files
@@ -28,10 +34,12 @@ public class LevelSelector : MonoBehaviour
 
             LevelList[levelIndex].GetComponent<Level>().LevelName = levelName;
             LevelList[levelIndex].GetComponent<Level>().Text.text = levelName;
+            LevelList[levelIndex].GetComponent<Level>().IsNewLevel = false;
 
             levelIndex++;
         }
+
+        LevelList.Add(Instantiate(NewLevelPrefab, LevelsTransform));
+        LevelList[levelIndex].GetComponent<Level>().IsNewLevel = true;
     }
-
-
 }

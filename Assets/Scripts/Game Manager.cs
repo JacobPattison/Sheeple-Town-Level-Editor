@@ -45,6 +45,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            this.LevelName = PlayerPrefs.GetString("levelName");
+            this.Width = int.Parse(PlayerPrefs.GetString("levelWidth"));
+            this.Height = int.Parse(PlayerPrefs.GetString("levelHeight"));
             GenerateGrid();
         }
     }
@@ -61,6 +64,10 @@ public class GameManager : MonoBehaviour
     private void SaveLevel()
     {
         // Saves name and dimentions
+        /*
+        if (!File.Exists(SavePath))
+            File.Create(SavePath);
+        */
         File.WriteAllText(SavePath, "");
         File.AppendAllText(SavePath, LevelName + "\r\n");
         File.AppendAllText(SavePath, Width.ToString() + "," + Height.ToString() + "\r\n");
