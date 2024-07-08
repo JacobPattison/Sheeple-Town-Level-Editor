@@ -114,7 +114,7 @@ MonoBehaviour:
   NewLevelUIPrefab: {fileID: 3476422233401867719, guid: 8188fcd797817184eb1c90729d9268da, type: 3}
   Path: 
   LevelName: 
-  Text: {fileID: 0}
+  Text: {fileID: 793120720083201701}
   IsNewLevel: 0
 --- !u!1 &6913139415813738002
 GameObject:

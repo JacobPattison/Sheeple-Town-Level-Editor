@@ -18,6 +18,11 @@ public class LevelSelector : MonoBehaviour
         LoadLevels();
     }
 
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
     private void LoadLevels()
     {
         string[] allPaths = Directory.GetFiles(LevelDirectory); // Gets all files, including meta files
