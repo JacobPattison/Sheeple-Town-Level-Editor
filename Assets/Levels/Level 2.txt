@@ -1,0 +1,8 @@
+Level 2
+16,6
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,

@@ -12,6 +12,13 @@ public class Level : MonoBehaviour
     public TMPro.TMP_Text Text;
     public bool IsNewLevel = false;
 
+    private void Start()
+    {
+        if (GameObject.Find("New Level UI(Clone)") == null)
+            if (PlayerPrefs.GetString("IsLoadingNewLevelUI") == "True")
+                InstantiateNewLevelUI();
+    }
+
     private void OnMouseDown()
     {
         if (IsNewLevel)

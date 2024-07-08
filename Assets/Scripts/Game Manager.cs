@@ -12,9 +12,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private Transform levelViewTransform;
     [SerializeField] private List<GameObject> Tiles;
+    [SerializeField] private GameObject NewLevelUiPrefab;
+    [SerializeField] private Transform NavigationBarTransform;
 
     private string LevelName = "Test";
-    private int Width = 17, Height = 7;
+    private int Width, Height;
     private string SavePath;
 
     private Dictionary<int, Vector3> RoadRotations;
@@ -82,8 +84,11 @@ public class GameManager : MonoBehaviour
 
                 File.AppendAllText(SavePath, currentTileType.ToString() + "/" + currentOrientation.ToString() + ",");
             }
-            File.AppendAllText(SavePath, "\r\n");
+            if ((y == this.Height - 1) == false)
+                File.AppendAllText(SavePath, "\r\n");
         }
+
+        PlayerPrefs.SetString("IsLoadingNewLevelUI", "False");
     }
 
     private void LoadLevel()
@@ -93,7 +98,7 @@ public class GameManager : MonoBehaviour
         // Assign name and dimentions
         this.LevelName = levelData[0];
         this.Width = int.Parse(levelData[1].Split(",")[0]);
-        this.Width = int.Parse(levelData[1].Split(",")[1]);
+        this.Height = int.Parse(levelData[1].Split(",")[1]);
 
         // Read rest of file which the data for the tiles
         int listIndex = 0;
@@ -310,6 +315,13 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("LevelSelector");
     }
 
+    public void CreateNewLevelUI()
+    {
+        SaveLevel();
+        PlayerPrefs.SetString("IsLoadingNewLevelUI", "True");
+        SceneManager.LoadScene("LevelSelector");
+    }
+
     #endregion
 
     private void InstantiateRoadRotations()
@@ -353,7 +365,7 @@ public class GameManager : MonoBehaviour
         {
             for (int x = 0; x < this.Width; x++)
             {
-                Tiles.Add(Instantiate(tilePrefab, new Vector2(x, -y), Quaternion.identity));
+                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 35), Quaternion.identity));
 
                 Tiles[listIndex].name = $"{x},{y}";
                 RoadOrientations.Add(new Vector2(x, y), 0);

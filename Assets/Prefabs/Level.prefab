@@ -90,9 +90,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45191221ec9f2ac47918c20759ed6626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NewLevelUIPrefab: {fileID: 3476422233401867719, guid: 8188fcd797817184eb1c90729d9268da, type: 3}
   Path: 
   LevelName: 
   Text: {fileID: 793120720083201701}
+  IsNewLevel: 0
 --- !u!65 &5588656524648035749
 BoxCollider:
   m_ObjectHideFlags: 0

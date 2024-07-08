@@ -1,0 +1,17 @@
+Level 1
+14,15
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
