@@ -1,0 +1,8 @@
+Level 7
+8,6
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,

@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform levelViewTransform;
     [SerializeField] private List<GameObject> Tiles;
     [SerializeField] private GameObject NewLevelUiPrefab;
-    [SerializeField] private Transform NavigationBarTransform;
+    [SerializeField] private Transform UITransform;
 
     private string LevelName = "Test";
     private int Width, Height;
@@ -366,7 +366,7 @@ public class GameManager : MonoBehaviour
         {
             for (int x = 0; x < this.Width; x++)
             {
-                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, -35), Quaternion.identity));
+                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 0), Quaternion.identity));
 
                 Tiles[listIndex].name = $"{x},{y}";
                 RoadOrientations.Add(new Vector2(x, y), 0);

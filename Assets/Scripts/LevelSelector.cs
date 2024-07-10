@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using UnityEngine.UI;
 
 public class LevelSelector : MonoBehaviour
 {
@@ -40,11 +41,24 @@ public class LevelSelector : MonoBehaviour
             LevelList[levelIndex].GetComponent<Level>().LevelName = levelName;
             LevelList[levelIndex].GetComponent<Level>().Text.text = levelName;
             LevelList[levelIndex].GetComponent<Level>().IsNewLevel = false;
+            
+            foreach (Transform childTransform in LevelList[levelIndex].transform)
+            {
+                if (childTransform.name == "Index")
+                {
+                    childTransform.gameObject.GetComponent<UnityEngine.UI.Text>().text = levelIndex.ToString();
+                }
+            }
 
             levelIndex++;
         }
 
         LevelList.Add(Instantiate(NewLevelPrefab, LevelsTransform));
         LevelList[levelIndex].GetComponent<Level>().IsNewLevel = true;
+    }
+
+    public void DeleteLevel (Text indexText)
+    {
+
     }
 }

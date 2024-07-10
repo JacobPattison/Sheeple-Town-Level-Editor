@@ -1,0 +1,13 @@
+Level 4
+11,11
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Road/12,Road/15,Road/20,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Road/8,Building/0,Road/8,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Road/8,Building/0,Road/8,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Road/6,Road/15,Road/10,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
+Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,Grass/0,
