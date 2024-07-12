@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Level : MonoBehaviour
 {
     [SerializeField] private GameObject NewLevelUIPrefab;
 
+    public UnityEngine.UIElements.Image Thumbnail;
+
     public string Path;
     public string LevelName;
+
     public TMPro.TMP_Text Text;
+
     public bool IsNewLevel = false;
 
     private void Start()

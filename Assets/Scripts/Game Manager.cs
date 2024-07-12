@@ -10,10 +10,14 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private Transform levelViewTransform;
-    [SerializeField] private List<GameObject> Tiles;
     [SerializeField] private GameObject NewLevelUiPrefab;
+
+    [SerializeField] private Transform levelViewTransform;
     [SerializeField] private Transform UITransform;
+
+    [SerializeField] private Camera ThumbnailCamera;
+
+    [SerializeField] private List<GameObject> Tiles;
 
     private string LevelName = "Test";
     private int Width, Height;
@@ -21,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<int, Vector3> RoadRotations;
     private Dictionary<Vector2, int> RoadOrientations;
+
     private TileType selectedTileType;
 
     #region Unity
@@ -52,6 +57,7 @@ public class GameManager : MonoBehaviour
             this.Height = int.Parse(PlayerPrefs.GetString("levelHeight"));
             GenerateGrid();
         }
+
     }
 
     private void OnApplicationQuit()
@@ -59,6 +65,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.DeleteAll();
         SaveLevel();
     }
+
 
     #endregion
 
@@ -90,6 +97,7 @@ public class GameManager : MonoBehaviour
         }
 
         PlayerPrefs.SetString("IsLoadingNewLevelUI", "False");
+
     }
 
     private void LoadLevel()
@@ -151,6 +159,23 @@ public class GameManager : MonoBehaviour
         }
 
         levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
+    }
+
+    private void SaveThumbnail()
+    {
+        RenderTexture screenTexture = new RenderTexture(Screen.width, Screen.height, 16);
+        ThumbnailCamera.targetTexture = screenTexture;
+        RenderTexture.active = screenTexture;
+        ThumbnailCamera.Render();
+
+        Texture2D renderedTexture = new Texture2D(Screen.width, Screen.height);
+        renderedTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        RenderTexture.active = null;
+
+        string imageSavePath = Path.GetDirectoryName(SavePath);
+
+        byte[] byteArray = renderedTexture.EncodeToPNG();
+        System.IO.File.WriteAllBytes(imageSavePath + "/Thumbnails/" + this.LevelName + ".png", byteArray);
     }
 
     #endregion
@@ -310,17 +335,27 @@ public class GameManager : MonoBehaviour
 
     #region UI
 
-    public void ReturnToLevelSelector ()
+    public void ReturnToLevelSelector()
     {
+        SaveThumbnail();
         SaveLevel();
         SceneManager.LoadScene("LevelSelector");
     }
 
     public void CreateNewLevelUI()
     {
+        SaveThumbnail();
         SaveLevel();
         PlayerPrefs.SetString("IsLoadingNewLevelUI", "True");
         SceneManager.LoadScene("LevelSelector");
+    }
+
+    public void Exit()
+    {
+        SaveThumbnail();
+        SaveLevel();
+        UnityEditor.EditorApplication.ExitPlaymode();
+        Application.Quit();
     }
 
     #endregion

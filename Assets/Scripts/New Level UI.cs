@@ -30,4 +30,9 @@ public class NewLevelUI : MonoBehaviour
 
         SceneManager.LoadScene("LevelEditor");
     }
+
+    public void Close()
+    {
+        Destroy(this.gameObject);
+    }
 }
