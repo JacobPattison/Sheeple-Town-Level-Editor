@@ -1,7 +1,0 @@
-Level 6
-4,5
-Building/0,Building/0,Building/0,Building/0,
-Building/0,Grass/0,Grass/0,Building/0,
-Building/0,Grass/0,Grass/0,Building/0,
-Building/0,Building/0,Building/0,Building/0,
-Building/0,Building/0,Building/0,Building/0,

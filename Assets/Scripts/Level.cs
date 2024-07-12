@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,5 +36,18 @@ public class Level : MonoBehaviour
     private void InstantiateNewLevelUI()
     {
         Instantiate(NewLevelUIPrefab, GameObject.Find("Level Selector").transform);
+    }
+
+    public void DeleteLevel()
+    {
+        Debug.Log("Deleted Level: " + this.Path);
+
+        if (File.Exists(this.Path))
+            File.Delete(this.Path);
+
+        if (File.Exists(this.Path + ".meta"))
+            File.Delete(this.Path + ".meta");
+
+        Destroy(this.gameObject);
     }
 }
