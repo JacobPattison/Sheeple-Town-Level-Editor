@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NewLevelUIPrefab: {fileID: 3476422233401867719, guid: 8188fcd797817184eb1c90729d9268da, type: 3}
+  ConfirmDeletePrefab: {fileID: 2039239183935124074, guid: 6b62be150b6ffe144acce18148c245d9, type: 3}
   Path: 
   LevelName: 
   Text: {fileID: 793120720083201701}

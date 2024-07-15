@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 public class Level : MonoBehaviour
 {
     [SerializeField] private GameObject NewLevelUIPrefab;
+    [SerializeField] private GameObject ConfirmDeletePrefab;
 
     public UnityEngine.UIElements.Image Thumbnail;
 
@@ -44,16 +45,11 @@ public class Level : MonoBehaviour
         Instantiate(NewLevelUIPrefab, GameObject.Find("Level Selector").transform);
     }
 
-    public void DeleteLevel()
+    public void SpawnConfirmDeleteUI()
     {
-        Debug.Log("Deleted Level: " + this.Path);
-
-        if (File.Exists(this.Path))
-            File.Delete(this.Path);
-
-        if (File.Exists(this.Path + ".meta"))
-            File.Delete(this.Path + ".meta");
-
-        Destroy(this.gameObject);
+        Transform levelEditor = GameObject.Find("Level Selector").transform;
+        GameObject confirmDelete = Instantiate(ConfirmDeletePrefab, levelEditor);
+        confirmDelete.GetComponent<ConfirmDelete>().Path = this.Path;
+        confirmDelete.GetComponent<ConfirmDelete>().level = this.gameObject;
     }
 }
