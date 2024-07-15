@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private GameObject NewLevelUiPrefab;
+    [SerializeField] private GameObject GridPrefab;
 
     [SerializeField] private Transform levelViewTransform;
     [SerializeField] private Transform UITransform;
@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Camera ThumbnailCamera;
 
     [SerializeField] private List<GameObject> Tiles;
+    
+    private List<GameObject> Grids;
 
     private string LevelName = "Test";
     private int Width, Height;
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         Tiles = new List<GameObject>();
         RoadOrientations = new Dictionary<Vector2, int>();
+        Grids = new List<GameObject>();
 
         if (PlayerPrefs.HasKey("SavePath"))
         {
@@ -58,6 +61,7 @@ public class GameManager : MonoBehaviour
             GenerateGrid();
         }
 
+        GenerateGridOutline();
     }
 
     private void OnApplicationQuit()
@@ -399,6 +403,7 @@ public class GameManager : MonoBehaviour
         int listIndex = 0;
         for (int y = 0; y < this.Height; y++)
         {
+
             for (int x = 0; x < this.Width; x++)
             {
                 Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 0), Quaternion.identity));
@@ -410,5 +415,36 @@ public class GameManager : MonoBehaviour
             }
         }
         levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
+    }
+
+    private void GenerateGridOutline()
+    {
+        int vertLines = this.Width - 1;
+        int horiLines = this.Height - 1;
+
+        float verticalOffSet = 0;
+        float horizontalOffSet = 0;
+
+        if (this.Height % 2 == 0)
+            verticalOffSet = 0.5f;
+
+        if (this.Height % 2 == 0)
+            horizontalOffSet = 0.5f;
+
+        for (int x = 0; x < vertLines; x++)
+        {
+            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + x, verticalOffSet - (this.Height / 2), -1.0f), Quaternion.identity);
+            grid.transform.localScale = new Vector3(0.05f, this.Height);
+
+            Grids.Add(grid);
+        }
+
+        for (int y = 0; y < horiLines; y++)
+        {
+            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + y, horizontalOffSet - (this.Width / 2), -1.0f), Quaternion.identity);
+            grid.transform.localScale = new Vector3(this.Width, 0.05f);
+
+            Grids.Add(grid);
+        }
     }
 }
