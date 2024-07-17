@@ -17,8 +17,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Camera ThumbnailCamera;
 
-    [SerializeField] private List<GameObject> Tiles;
-    
+    private List<GameObject> Tiles;
     private List<GameObject> Grids;
 
     private string LevelName;

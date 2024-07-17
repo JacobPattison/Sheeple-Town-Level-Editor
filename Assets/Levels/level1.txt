@@ -1,7 +1,0 @@
-level1
-5,5
-Grass/0,Road/4,Grass/0,Grass/0,Grass/0,
-Road/3,Road/120,Road/15,Road/20,Building/0,
-Grass/0,Road/2,Grass/0,Road/8,Grass/0,
-Grass/0,Grass/0,Road/12,Road/10,Building/0,
-Grass/0,Building/0,Road/2,Grass/0,Grass/0,
