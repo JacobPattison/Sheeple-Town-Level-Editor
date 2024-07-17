@@ -38,29 +38,13 @@ public class GameManager : MonoBehaviour
         RoadOrientations = new Dictionary<Vector2, int>();
         Grids = new List<GameObject>();
 
-        if (PlayerPrefs.HasKey("SavePath"))
-        {
-            SavePath = PlayerPrefs.GetString("SavePath");
-            Debug.Log("Save path loaded: " + SavePath);
-        }
-
         // Create preset rotations for the 3D Tile Object
         InstantiateRoadRotations();
 
         // If theres a level load it, if not create one
-        
-        if (File.Exists(SavePath))
-        {
-            LoadLevel();
-        }
-        else
-        {
-            this.LevelName = PlayerPrefs.GetString("levelName");
-            this.Width = int.Parse(PlayerPrefs.GetString("levelWidth"));
-            this.Height = int.Parse(PlayerPrefs.GetString("levelHeight"));
-            GenerateGrid();
-        }
+        CheckExistingLevel();
 
+        // Generate the outline for the grid
         GenerateGridOutline();
     }
 
@@ -181,6 +165,116 @@ public class GameManager : MonoBehaviour
         byte[] byteArray = renderedTexture.EncodeToPNG();
         System.IO.File.WriteAllBytes(imageSavePath + "/Thumbnails/" + this.LevelName + ".png", byteArray);
     }
+
+    #endregion
+
+    #region Instantiates
+
+    private void CheckExistingLevel()
+    {
+        if (PlayerPrefs.HasKey("SavePath"))
+        {
+            SavePath = PlayerPrefs.GetString("SavePath");
+            Debug.Log("Save path loaded: " + SavePath);
+        }
+
+        if (File.Exists(SavePath))
+        {
+            LoadLevel();
+        }
+        else
+        {
+            this.LevelName = PlayerPrefs.GetString("levelName");
+            this.Width = int.Parse(PlayerPrefs.GetString("levelWidth"));
+            this.Height = int.Parse(PlayerPrefs.GetString("levelHeight"));
+            GenerateGrid();
+        }
+    }
+
+    private void InstantiateRoadRotations()
+    {
+        RoadRotations = new Dictionary<int, Vector3>();
+
+        // Zero Roads
+        RoadRotations.Add(1, new Vector3(90, 0, 0));
+
+        // One Road
+        RoadRotations.Add(15, new Vector3(90, 0, 0));
+        RoadRotations.Add(3, new Vector3(90, 0, 0));
+        RoadRotations.Add(5, new Vector3(90, 0, 0));
+
+        RoadRotations.Add(8, new Vector3(90, 0, 90));
+        RoadRotations.Add(2, new Vector3(90, 0, 90));
+        RoadRotations.Add(4, new Vector3(90, 0, 90));
+
+        // Two Roads
+        RoadRotations.Add(6, new Vector3(90, 270, 0));
+        RoadRotations.Add(12, new Vector3(90, 270, -90));
+        RoadRotations.Add(20, new Vector3(90, 270, -180));
+        RoadRotations.Add(10, new Vector3(90, 270, -270));
+
+        // Three Roads
+        RoadRotations.Add(30, new Vector3(90, 180, 0));
+        RoadRotations.Add(24, new Vector3(90, 180, -90));
+        RoadRotations.Add(60, new Vector3(90, 180, -180));
+        RoadRotations.Add(40, new Vector3(90, 180, -270));
+
+        // Four Roads
+        RoadRotations.Add(120, new Vector3(0, 90, 0));
+
+    }
+
+    private void GenerateGrid()
+    {
+        // Generates grid of grass tile
+        int listIndex = 0;
+        for (int y = 0; y < this.Height; y++)
+        {
+
+            for (int x = 0; x < this.Width; x++)
+            {
+                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 0), Quaternion.identity));
+
+                Tiles[listIndex].name = $"{x},{y}";
+                RoadOrientations.Add(new Vector2(x, y), 0);
+
+                listIndex++;
+            }
+        }
+        levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
+    }
+
+    private void GenerateGridOutline()
+    {
+        int vertLines = this.Width - 1;
+        int horiLines = this.Height - 1;
+
+        float verticalOffSet = 0;
+        float horizontalOffSet = 0;
+
+        if (this.Height % 2 == 0)
+            verticalOffSet = 0.5f;
+
+        if (this.Width % 2 == 0)
+            horizontalOffSet = 0.5f;
+
+        for (int x = 0; x < vertLines; x++)
+        {
+            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + x, verticalOffSet - (this.Height / 2), -1.0f), Quaternion.identity);
+            grid.transform.localScale = new Vector3(0.05f, this.Height);
+
+            Grids.Add(grid);
+        }
+
+        for (int y = 0; y < horiLines; y++)
+        {
+            GameObject grid = Instantiate(GridPrefab, new Vector3(-(horizontalOffSet - (this.Width / 2)), -(0.5f + y), -1.0f), Quaternion.identity);
+            grid.transform.localScale = new Vector3(this.Width, 0.05f);
+
+            Grids.Add(grid);
+        }
+    }
+
 
     #endregion
 
@@ -364,87 +458,4 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    private void InstantiateRoadRotations()
-    {
-        RoadRotations = new Dictionary<int, Vector3>();
-
-        // Zero Roads
-        RoadRotations.Add(1, new Vector3(90, 0, 0));
-
-        // One Road
-        RoadRotations.Add(15, new Vector3(90, 0, 0));
-        RoadRotations.Add(3, new Vector3(90, 0, 0));
-        RoadRotations.Add(5, new Vector3(90, 0, 0));
-
-        RoadRotations.Add(8, new Vector3(90, 0, 90));
-        RoadRotations.Add(2, new Vector3(90, 0, 90));
-        RoadRotations.Add(4, new Vector3(90, 0, 90));
-
-        // Two Roads
-        RoadRotations.Add(6, new Vector3(90, 270, 0));
-        RoadRotations.Add(12, new Vector3(90, 270, -90));
-        RoadRotations.Add(20, new Vector3(90, 270, -180));
-        RoadRotations.Add(10, new Vector3(90, 270, -270));
-
-        // Three Roads
-        RoadRotations.Add(30, new Vector3(90, 180, 0));
-        RoadRotations.Add(24, new Vector3(90, 180, -90));
-        RoadRotations.Add(60, new Vector3(90, 180, -180));
-        RoadRotations.Add(40, new Vector3(90, 180, -270));
-
-        // Four Roads
-        RoadRotations.Add(120, new Vector3(0, 90, 0));
-
-    }
-
-    private void GenerateGrid()
-    {
-        // Generates grid of grass tile
-        int listIndex = 0;
-        for (int y = 0; y < this.Height; y++)
-        {
-
-            for (int x = 0; x < this.Width; x++)
-            {
-                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 0), Quaternion.identity));
-
-                Tiles[listIndex].name = $"{x},{y}";
-                RoadOrientations.Add(new Vector2(x, y), 0);
-
-                listIndex++;
-            }
-        }
-        levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
-    }
-
-    private void GenerateGridOutline()
-    {
-        int vertLines = this.Width - 1;
-        int horiLines = this.Height - 1;
-
-        float verticalOffSet = 0;
-        float horizontalOffSet = 0;
-
-        if (this.Height % 2 == 0)
-            verticalOffSet = 0.5f;
-
-        if (this.Height % 2 == 0)
-            horizontalOffSet = 0.5f;
-
-        for (int x = 0; x < vertLines; x++)
-        {
-            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + x, verticalOffSet - (this.Height / 2), -1.0f), Quaternion.identity);
-            grid.transform.localScale = new Vector3(0.05f, this.Height);
-
-            Grids.Add(grid);
-        }
-
-        for (int y = 0; y < horiLines; y++)
-        {
-            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + y, horizontalOffSet - (this.Width / 2), -1.0f), Quaternion.identity);
-            grid.transform.localScale = new Vector3(this.Width, 0.05f);
-
-            Grids.Add(grid);
-        }
-    }
 }
