@@ -21,11 +21,13 @@ public class GameManager : MonoBehaviour
     
     private List<GameObject> Grids;
 
-    private string LevelName = "Test";
-    private int Width, Height;
+    private string LevelName;
     private string SavePath;
+    private int Width, Height;
+    private bool GridActive;
+    private bool IsTest;
 
-    private Dictionary<int, Vector3> RoadRotations;
+    private Dictionary<int, Vector3> PresetRoadRotations;
     private Dictionary<Vector2, int> RoadOrientations;
 
     private TileType selectedTileType;
@@ -37,15 +39,19 @@ public class GameManager : MonoBehaviour
         Tiles = new List<GameObject>();
         RoadOrientations = new Dictionary<Vector2, int>();
         Grids = new List<GameObject>();
+        this.GridActive = true;
 
         // Create preset rotations for the 3D Tile Object
-        InstantiateRoadRotations();
+        InstantiatePresetRoadRotations();
 
         // If theres a level load it, if not create one
         CheckExistingLevel();
 
         // Generate the outline for the grid
         GenerateGridOutline();
+
+        // Toggle grid off by default
+        ToggleGridOutline();
     }
 
     private void OnApplicationQuit()
@@ -61,11 +67,9 @@ public class GameManager : MonoBehaviour
 
     private void SaveLevel()
     {
+        if (IsTest) return;
+
         // Saves name and dimentions
-        /*
-        if (!File.Exists(SavePath))
-            File.Create(SavePath);
-        */
         File.WriteAllText(SavePath, "");
         File.AppendAllText(SavePath, LevelName + "\r\n");
         File.AppendAllText(SavePath, Width.ToString() + "," + Height.ToString() + "\r\n");
@@ -138,7 +142,7 @@ public class GameManager : MonoBehaviour
                 }
                 else if (currentTileType == TileType.Road)
                 {
-                    Vector3 roadRotation = RoadRotations.Single(v => v.Key == int.Parse(tileData[1])).Value;
+                    Vector3 roadRotation = PresetRoadRotations.Single(v => v.Key == int.Parse(tileData[1])).Value;
                     ChangeTileOrientation(x, y, int.Parse(tileData[1]), roadRotation);
                 }
 
@@ -151,6 +155,8 @@ public class GameManager : MonoBehaviour
 
     private void SaveThumbnail()
     {
+        if (IsTest) return;
+
         RenderTexture screenTexture = new RenderTexture(Screen.width, Screen.height, 16);
         ThumbnailCamera.targetTexture = screenTexture;
         RenderTexture.active = screenTexture;
@@ -174,53 +180,62 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("SavePath"))
         {
+            IsTest = false;
             SavePath = PlayerPrefs.GetString("SavePath");
             Debug.Log("Save path loaded: " + SavePath);
-        }
 
-        if (File.Exists(SavePath))
-        {
-            LoadLevel();
+            if (File.Exists(SavePath))
+            {
+                LoadLevel();
+            }
+            else
+            {
+                this.LevelName = PlayerPrefs.GetString("levelName");
+                this.Width = int.Parse(PlayerPrefs.GetString("levelWidth"));
+                this.Height = int.Parse(PlayerPrefs.GetString("levelHeight"));
+                GenerateGrid();
+            }
         }
         else
         {
-            this.LevelName = PlayerPrefs.GetString("levelName");
-            this.Width = int.Parse(PlayerPrefs.GetString("levelWidth"));
-            this.Height = int.Parse(PlayerPrefs.GetString("levelHeight"));
+            IsTest = true;
+            this.LevelName = "Test";
+            this.Width = 17;
+            this.Height = 9;
             GenerateGrid();
         }
     }
 
-    private void InstantiateRoadRotations()
+    private void InstantiatePresetRoadRotations()
     {
-        RoadRotations = new Dictionary<int, Vector3>();
+        PresetRoadRotations = new Dictionary<int, Vector3>();
 
         // Zero Roads
-        RoadRotations.Add(1, new Vector3(90, 0, 0));
+        PresetRoadRotations.Add(1, new Vector3(90, 0, 0));
 
         // One Road
-        RoadRotations.Add(15, new Vector3(90, 0, 0));
-        RoadRotations.Add(3, new Vector3(90, 0, 0));
-        RoadRotations.Add(5, new Vector3(90, 0, 0));
+        PresetRoadRotations.Add(15, new Vector3(90, 0, 0));
+        PresetRoadRotations.Add(3, new Vector3(90, 0, 0));
+        PresetRoadRotations.Add(5, new Vector3(90, 0, 0));
 
-        RoadRotations.Add(8, new Vector3(90, 0, 90));
-        RoadRotations.Add(2, new Vector3(90, 0, 90));
-        RoadRotations.Add(4, new Vector3(90, 0, 90));
+        PresetRoadRotations.Add(8, new Vector3(90, 0, 90));
+        PresetRoadRotations.Add(2, new Vector3(90, 0, 90));
+        PresetRoadRotations.Add(4, new Vector3(90, 0, 90));
 
         // Two Roads
-        RoadRotations.Add(6, new Vector3(90, 270, 0));
-        RoadRotations.Add(12, new Vector3(90, 270, -90));
-        RoadRotations.Add(20, new Vector3(90, 270, -180));
-        RoadRotations.Add(10, new Vector3(90, 270, -270));
+        PresetRoadRotations.Add(6, new Vector3(90, 270, 0));
+        PresetRoadRotations.Add(12, new Vector3(90, 270, -90));
+        PresetRoadRotations.Add(20, new Vector3(90, 270, -180));
+        PresetRoadRotations.Add(10, new Vector3(90, 270, -270));
 
         // Three Roads
-        RoadRotations.Add(30, new Vector3(90, 180, 0));
-        RoadRotations.Add(24, new Vector3(90, 180, -90));
-        RoadRotations.Add(60, new Vector3(90, 180, -180));
-        RoadRotations.Add(40, new Vector3(90, 180, -270));
+        PresetRoadRotations.Add(30, new Vector3(90, 180, 0));
+        PresetRoadRotations.Add(24, new Vector3(90, 180, -90));
+        PresetRoadRotations.Add(60, new Vector3(90, 180, -180));
+        PresetRoadRotations.Add(40, new Vector3(90, 180, -270));
 
         // Four Roads
-        RoadRotations.Add(120, new Vector3(0, 90, 0));
+        PresetRoadRotations.Add(120, new Vector3(0, 90, 0));
 
     }
 
@@ -377,7 +392,7 @@ public class GameManager : MonoBehaviour
         }
 
         int key = 0;
-        foreach (KeyValuePair<int, Vector3> item in RoadRotations)
+        foreach (KeyValuePair<int, Vector3> item in PresetRoadRotations)
         {
             if (item.Key == rotationIndex)
             {
@@ -457,5 +472,25 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public void ToggleGridOutline()
+    {
+        if (GridActive)
+        {
+            foreach (GameObject gridOutline in Grids)
+            {
+                gridOutline.SetActive(false);
+            }
+            GridActive = false;
+        }
+        else
+        {
+            foreach (GameObject gridOutline in Grids)
+            {
+                gridOutline.SetActive(true);
+            }
+            GridActive = true;
+        }
+    }
 
 }
