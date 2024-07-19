@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     private int Width, Height;
     private bool GridActive;
     private bool IsTest;
+    public bool IsMoveable;
 
     private Dictionary<int, Vector3> PresetRoadRotations;
     private Dictionary<Vector2, int> RoadOrientations;
@@ -39,6 +40,14 @@ public class GameManager : MonoBehaviour
         RoadOrientations = new Dictionary<Vector2, int>();
         Grids = new List<GameObject>();
         this.GridActive = true;
+
+        if (this.Width > 17 && this.Height > 8)
+            IsMoveable = true;
+        else
+            IsMoveable = false;
+
+        LevelView.width = this.Width;
+        LevelView.height = this.Height;
 
         // Create preset rotations for the 3D Tile Object
         InstantiatePresetRoadRotations();
@@ -110,7 +119,7 @@ public class GameManager : MonoBehaviour
             {
                 string[] tileData = rowData[x].Split("/");
 
-                Tiles.Add(Instantiate(tilePrefab, new Vector2(x, -y), Quaternion.identity));
+                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 90), Quaternion.identity));
                 Tiles[listIndex].name = $"{x},{y}";
 
                 TileType currentTileType = new TileType();
@@ -148,8 +157,10 @@ public class GameManager : MonoBehaviour
                 listIndex++;
             }
         }
-
-        levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
+        if (this.IsMoveable)
+            levelViewTransform.transform.position = new Vector3(8.377266f, -3.021386f, -10);
+        else
+            levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
     }
 
     private void SaveThumbnail()
@@ -247,7 +258,7 @@ public class GameManager : MonoBehaviour
 
             for (int x = 0; x < this.Width; x++)
             {
-                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 0), Quaternion.identity));
+                Tiles.Add(Instantiate(tilePrefab, new Vector3(x, -y, 90), Quaternion.identity));
 
                 Tiles[listIndex].name = $"{x},{y}";
                 RoadOrientations.Add(new Vector2(x, y), 0);
@@ -255,7 +266,10 @@ public class GameManager : MonoBehaviour
                 listIndex++;
             }
         }
-        levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
+        if (this.IsMoveable)
+            levelViewTransform.transform.position = new Vector3(8.377266f, -3.021386f, -10);
+        else
+            levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
     }
 
     private void GenerateGridOutline()
@@ -274,7 +288,7 @@ public class GameManager : MonoBehaviour
 
         for (int x = 0; x < vertLines; x++)
         {
-            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + x, verticalOffSet - (this.Height / 2), -1.0f), Quaternion.identity);
+            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + x, verticalOffSet - (this.Height / 2), 90.0f), Quaternion.identity);
             grid.transform.localScale = new Vector3(0.05f, this.Height);
 
             Grids.Add(grid);
@@ -282,7 +296,7 @@ public class GameManager : MonoBehaviour
 
         for (int y = 0; y < horiLines; y++)
         {
-            GameObject grid = Instantiate(GridPrefab, new Vector3(-(horizontalOffSet - (this.Width / 2)), -(0.5f + y), -1.0f), Quaternion.identity);
+            GameObject grid = Instantiate(GridPrefab, new Vector3(-(horizontalOffSet - (this.Width / 2)), -(0.5f + y), 90.0f), Quaternion.identity);
             grid.transform.localScale = new Vector3(this.Width, 0.05f);
 
             Grids.Add(grid);
