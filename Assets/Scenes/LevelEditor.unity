@@ -1276,6 +1276,7 @@ MonoBehaviour:
   levelViewTransform: {fileID: 1533384090}
   UITransform: {fileID: 916001356}
   ThumbnailCamera: {fileID: 1453791714}
+  IsMoveable: 0
 --- !u!4 &676713777
 Transform:
   m_ObjectHideFlags: 0
@@ -2413,10 +2414,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panSpeed: 20
-  minX: -0.5
-  maxX: -17.5
-  minY: -0.5
-  maxY: 8.5
+  minX: 0
+  maxX: 10
+  minY: -10
+  maxY: 0
 --- !u!1 &1618507420
 GameObject:
   m_ObjectHideFlags: 0
