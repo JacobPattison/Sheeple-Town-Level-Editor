@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private GameObject GridPrefab;
+    [SerializeField] private GameObject LevelView;
 
     [SerializeField] private Transform levelViewTransform;
     [SerializeField] private Transform UITransform;
@@ -46,8 +47,10 @@ public class GameManager : MonoBehaviour
         else
             IsMoveable = false;
 
-        LevelView.width = this.Width;
-        LevelView.height = this.Height;
+        LevelView.GetComponent<LevelView>().width = this.Width;
+        LevelView.GetComponent<LevelView>().height = this.Height;
+
+        LevelView.GetComponent<LevelView>().UpdateBounds();
 
         // Create preset rotations for the 3D Tile Object
         InstantiatePresetRoadRotations();
@@ -60,6 +63,7 @@ public class GameManager : MonoBehaviour
 
         // Toggle grid off by default
         ToggleGridOutline();
+
     }
 
     private void OnApplicationQuit()
@@ -161,6 +165,8 @@ public class GameManager : MonoBehaviour
             levelViewTransform.transform.position = new Vector3(8.377266f, -3.021386f, -10);
         else
             levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
+
+        LevelView.GetComponent<LevelView>().UpdateBounds();
     }
 
     private void SaveThumbnail()
@@ -270,6 +276,8 @@ public class GameManager : MonoBehaviour
             levelViewTransform.transform.position = new Vector3(8.377266f, -3.021386f, -10);
         else
             levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
+
+        LevelView.GetComponent<LevelView>().UpdateBounds();
     }
 
     private void GenerateGridOutline()

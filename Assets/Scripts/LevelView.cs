@@ -4,30 +4,22 @@ using UnityEngine;
 
 public class LevelView : MonoBehaviour
 {
-    public float panSpeed = 20f;
+    public int width;
+    public int height;
 
-    // Define boundaries
-    public float minX = -0.5f;
-    public float maxX = 16.5f;
-    public float minY = -0.5f;
-    public float maxY = 8.5f;
+    public float panSpeed = 10f; // Speed at which the camera moves
+    public float minX, maxX; // Minimum and maximum X bounds
+    public float minY, maxY; // Minimum and maximum Y bounds
 
-    public static int width;
-    public static int height;
-
+    private bool isPanning = false;
     private Vector3 lastPanPosition;
-    private bool isPanning;
 
-    private void Start()
+    public void UpdateBounds()
     {
-        maxX = width - 0.5f;
-        maxY = height - 0.5f;
-
-        // Manual Offset 
-        minX += 8.377266f;
-        maxX += 8.377266f;
-        minY += -3.021386f;
-        maxY += -3.021386f;
+        minX = 8.4f;
+        maxY = 3.02f;
+        minY = 0.5f - height - 3.02f;
+        maxX = width - 0.5f + 8.4f;
     }
 
     void Update()
@@ -71,9 +63,5 @@ public class LevelView : MonoBehaviour
         transform.position = newPosition;
 
         lastPanPosition = Input.mousePosition;
-
-        // Debugging
-        Debug.Log($"Camera Position: {transform.position}");
-        Debug.Log($"Pan Move: {move}");
     }
 }

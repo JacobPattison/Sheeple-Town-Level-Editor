@@ -1273,6 +1273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 539024065477212030, guid: ad0f90aa63c24644a93423068aa9968e, type: 3}
   GridPrefab: {fileID: 7796892244221830283, guid: 237f012a6bab40b489082848b1622df8, type: 3}
+  LevelView: {fileID: 1533384089}
   levelViewTransform: {fileID: 1533384090}
   UITransform: {fileID: 916001356}
   ThumbnailCamera: {fileID: 1453791714}
@@ -2413,7 +2414,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511499a509372654390bdb3b4216faed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panSpeed: 20
+  width: 0
+  height: 0
+  panSpeed: 10
   minX: 0
   maxX: 10
   minY: -10
