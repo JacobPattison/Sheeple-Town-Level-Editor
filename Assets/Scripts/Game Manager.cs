@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject GridPrefab;
     [SerializeField] private GameObject LevelView;
 
-    [SerializeField] private Transform levelViewTransform;
     [SerializeField] private Transform UITransform;
 
     [SerializeField] private Camera ThumbnailCamera;
@@ -155,12 +154,6 @@ public class GameManager : MonoBehaviour
                 listIndex++;
             }
         }
-        if (this.IsMoveable)
-            levelViewTransform.transform.position = new Vector3(8.377266f, -3.021386f, -10);
-        else
-            levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
-
-        LevelView.GetComponent<LevelView>().UpdateBounds();
     }
 
     private void SaveThumbnail()
@@ -266,12 +259,6 @@ public class GameManager : MonoBehaviour
                 listIndex++;
             }
         }
-        if (this.IsMoveable)
-            levelViewTransform.transform.position = new Vector3(8.377266f, -3.021386f, -10);
-        else
-            levelViewTransform.transform.position = new Vector3((float)Width / 2 - 0.5f, -2.75f, -10);
-
-        LevelView.GetComponent<LevelView>().UpdateBounds();
     }
 
     private void GenerateGridOutline()
@@ -290,7 +277,7 @@ public class GameManager : MonoBehaviour
 
         for (int x = 0; x < vertLines; x++)
         {
-            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + x, verticalOffSet - (this.Height / 2), 90.0f), Quaternion.identity);
+            GameObject grid = Instantiate(GridPrefab, new Vector3(0.5f + x, verticalOffSet - (this.Height / 2), 85f), Quaternion.identity);
             grid.transform.localScale = new Vector3(0.05f, this.Height);
 
             Grids.Add(grid);
@@ -298,7 +285,7 @@ public class GameManager : MonoBehaviour
 
         for (int y = 0; y < horiLines; y++)
         {
-            GameObject grid = Instantiate(GridPrefab, new Vector3(-(horizontalOffSet - (this.Width / 2)), -(0.5f + y), 90.0f), Quaternion.identity);
+            GameObject grid = Instantiate(GridPrefab, new Vector3(-(horizontalOffSet - (this.Width / 2)), -(0.5f + y), 85f), Quaternion.identity);
             grid.transform.localScale = new Vector3(this.Width, 0.05f);
 
             Grids.Add(grid);

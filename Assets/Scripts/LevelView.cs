@@ -29,6 +29,12 @@ public class LevelView : MonoBehaviour
         else
             maxY = minY;
 
+        /*
+        minX -= 0.5f;
+        minY += 0.5f;
+        maxX += 0.5f;
+        maxY -= 0.5f;
+        */
     }
 
     void Update()
