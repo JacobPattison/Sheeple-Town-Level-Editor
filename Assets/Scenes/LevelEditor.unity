@@ -1274,7 +1274,6 @@ MonoBehaviour:
   tilePrefab: {fileID: 539024065477212030, guid: ad0f90aa63c24644a93423068aa9968e, type: 3}
   GridPrefab: {fileID: 7796892244221830283, guid: 237f012a6bab40b489082848b1622df8, type: 3}
   LevelView: {fileID: 1533384089}
-  levelViewTransform: {fileID: 1533384090}
   UITransform: {fileID: 916001356}
   ThumbnailCamera: {fileID: 1453791714}
   IsMoveable: 0
@@ -2347,7 +2346,7 @@ Transform:
   m_GameObject: {fileID: 1533384089}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 7.9, y: -2.52, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

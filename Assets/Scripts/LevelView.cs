@@ -22,19 +22,18 @@ public class LevelView : MonoBehaviour
         if (width > 17)
             maxX = minX + width - 17.8f; // 17.8 is the level view width
         else
+        { 
             maxX = minX;
+            transform.position = new Vector3((float)width / 2 - 0.5f, transform.position.y, transform.position.z);
+        }
 
         if (height > 8)
             maxY = minY - height + 8.52f; // 8.52 is the level view height
         else
+        {
             maxY = minY;
-
-        /*
-        minX -= 0.5f;
-        minY += 0.5f;
-        maxX += 0.5f;
-        maxY -= 0.5f;
-        */
+            transform.position = new Vector3(transform.position.x, (float)height / 2 - 0.5f, transform.position.z);
+        }
     }
 
     void Update()
@@ -72,8 +71,10 @@ public class LevelView : MonoBehaviour
         Vector3 newPosition = transform.position - move;
 
         // Clamp the new position within the defined boundaries
-        newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
-        newPosition.y = Mathf.Clamp(newPosition.y, maxY, minY);
+        //if (width <= 17)
+            newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
+        //if (height <= 8)
+            newPosition.y = Mathf.Clamp(newPosition.y, maxY, minY);
 
         transform.position = newPosition;
 
