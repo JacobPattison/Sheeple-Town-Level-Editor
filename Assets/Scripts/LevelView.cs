@@ -17,9 +17,18 @@ public class LevelView : MonoBehaviour
     public void UpdateBounds()
     {
         minX = 8.4f;
-        maxY = 3.02f;
-        minY = 0.5f - height - 3.02f;
-        maxX = width - 0.5f + 8.4f;
+        minY = -3.02f;
+
+        if (width > 17)
+            maxX = minX + width - 17.8f; // 17.8 is the level view width
+        else
+            maxX = minX;
+
+        if (height > 8)
+            maxY = minY - height + 8.52f; // 8.52 is the level view height
+        else
+            maxY = minY;
+
     }
 
     void Update()
@@ -58,7 +67,7 @@ public class LevelView : MonoBehaviour
 
         // Clamp the new position within the defined boundaries
         newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
-        newPosition.y = Mathf.Clamp(newPosition.y, minY, maxY);
+        newPosition.y = Mathf.Clamp(newPosition.y, maxY, minY);
 
         transform.position = newPosition;
 

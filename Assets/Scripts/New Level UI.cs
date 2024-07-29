@@ -18,8 +18,6 @@ public class NewLevelUI : MonoBehaviour
         string levelWidth = WidthInputField.text;
         string levelHeight = HeightInputField.text;
 
-        
-
         string path = LevelDirectory + levelName + ".txt";
 
         PlayerPrefs.SetString("levelName", levelName);

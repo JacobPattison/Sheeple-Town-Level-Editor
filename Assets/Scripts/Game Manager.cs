@@ -42,16 +42,6 @@ public class GameManager : MonoBehaviour
         Grids = new List<GameObject>();
         this.GridActive = true;
 
-        if (this.Width > 17 && this.Height > 8)
-            IsMoveable = true;
-        else
-            IsMoveable = false;
-
-        LevelView.GetComponent<LevelView>().width = this.Width;
-        LevelView.GetComponent<LevelView>().height = this.Height;
-
-        LevelView.GetComponent<LevelView>().UpdateBounds();
-
         // Create preset rotations for the 3D Tile Object
         InstantiatePresetRoadRotations();
 
@@ -64,6 +54,10 @@ public class GameManager : MonoBehaviour
         // Toggle grid off by default
         ToggleGridOutline();
 
+        // Set dimentions for the level view
+        LevelView.GetComponent<LevelView>().width = this.Width;
+        LevelView.GetComponent<LevelView>().height = this.Height;
+        LevelView.GetComponent<LevelView>().UpdateBounds();
     }
 
     private void OnApplicationQuit()
