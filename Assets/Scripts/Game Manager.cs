@@ -303,11 +303,12 @@ public class GameManager : MonoBehaviour
 
     public void ChangeTile (int x, int y)
     {
-        TileType selectedTileType = Tiles[((y) * this.Width) + x].GetComponent<Tile>().tileType;
+        TileType currentTileType = Tiles[((y) * this.Width) + x].GetComponent<Tile>().tileType;
 
-        if (!IsEditor && selectedTileType == TileType.Road)
+        if (!IsEditor)
         {
-            PlacePoints(x, y);
+            if (currentTileType == TileType.Road)
+                PlacePoints(x, y);
             return;
         }
 
@@ -515,6 +516,8 @@ public class GameManager : MonoBehaviour
     private int EndX;
     private int EndY;
 
+    private Tile[,] RoadTiles;
+
     private void PlacePoints (int x, int y)
     {
         if (IsPlacingStart)
@@ -568,6 +571,12 @@ public class GameManager : MonoBehaviour
     }
 
     public void ShowAllPaths()
+    {
+
+    }
+
+
+    private void CalculatePaths()
     {
 
     }
