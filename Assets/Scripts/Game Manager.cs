@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject GridPrefab;
     [SerializeField] private GameObject LevelView;
 
+    [SerializeField] private GameObject EditorUI;
+    [SerializeField] private GameObject RoutesUI;
+
     [SerializeField] private Transform UITransform;
 
     [SerializeField] private Camera ThumbnailCamera;
@@ -26,6 +29,7 @@ public class GameManager : MonoBehaviour
     private bool GridActive;
     private bool IsTest;
     public bool IsMoveable;
+    public bool IsEditor = true;
 
     private Dictionary<int, Vector3> PresetRoadRotations;
     private Dictionary<Vector2, int> RoadOrientations;
@@ -299,6 +303,14 @@ public class GameManager : MonoBehaviour
 
     public void ChangeTile (int x, int y)
     {
+        TileType selectedTileType = Tiles[((y) * this.Width) + x].GetComponent<Tile>().tileType;
+
+        if (!IsEditor && selectedTileType == TileType.Road)
+        {
+            PlacePoints(x, y);
+            return;
+        }
+
         // If placing tile is not a road tile, change it then return
         if (selectedTileType == TileType.Grass)
         {
@@ -472,9 +484,6 @@ public class GameManager : MonoBehaviour
         UnityEditor.EditorApplication.ExitPlaymode();
         Application.Quit();
     }
-
-    #endregion
-
     public void ToggleGridOutline()
     {
         if (GridActive)
@@ -495,4 +504,73 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    #endregion
+
+    #region Routes
+
+    private bool IsPlacingStart;
+    private int StartX;
+    private int StartY;
+    private int EndX;
+    private int EndY;
+
+    private void PlacePoints (int x, int y)
+    {
+        if (IsPlacingStart)
+        {
+            StartX = x;
+            StartY = y;
+            GameObject.Find("Start").transform.position = new Vector3(StartX, -StartY, 88);
+        }
+        else
+        {
+            EndX = x;
+            EndY = y;
+            GameObject.Find("End").transform.position = new Vector3(EndX, -EndY, 88);
+        }
+    }
+
+    public void ToggleRoutes()
+    {
+        if (IsEditor)
+        {
+            EditorUI.SetActive(false);
+            RoutesUI.SetActive(true);
+            IsEditor = false;
+        }
+        else
+        {
+            EditorUI.SetActive(true);
+            RoutesUI.SetActive(false);
+            IsEditor = true;
+        }
+    }
+
+    public void StartRoute()
+    {
+        IsPlacingStart = true;
+    }
+
+    public void EndRoute()
+    {
+        IsPlacingStart = false;
+    }
+
+    public void ShowShortestPaths()
+    {
+
+    }
+
+    public void ShowLongestPaths()
+    {
+
+    }
+
+    public void ShowAllPaths()
+    {
+
+    }
+
+    #endregion
 }
