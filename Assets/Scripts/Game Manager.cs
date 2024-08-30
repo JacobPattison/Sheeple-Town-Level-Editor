@@ -5,7 +5,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,16 +18,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject EditorUI;
     [SerializeField] private GameObject RoutesUI;
 
+    [SerializeField] private TMPro.TMP_Text CounterText;
+
     [SerializeField] private Transform UITransform;
 
     [SerializeField] private Camera ThumbnailCamera;
 
     private List<GameObject> Tiles;
     private List<GameObject> Grids;
+    private List<List<GameObject>> PathList;
+
+    List<int[,]> Paths;
 
     private string LevelName;
     private string SavePath;
     private int Width, Height;
+    private int PathCounter = 0;
     private bool GridActive;
     private bool IsTest;
     public bool IsMoveable;
@@ -67,6 +73,7 @@ public class GameManager : MonoBehaviour
         LevelView.GetComponent<LevelView>().height = this.Height;
         LevelView.GetComponent<LevelView>().UpdateBounds();
 
+        TempRoads = new List<GameObject>();
         Routes = new Routes();
     }
 
@@ -574,28 +581,62 @@ public class GameManager : MonoBehaviour
     public void ShowAllPaths()
     {
         Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
-        DebugRoadGrid(this.Height, this.Width);
+        Paths = Routes.CalculatePaths();
+        InstantiatePaths();
+        ShowPath(PathCounter, false);
     }
 
-    public void DebugRoadGrid(int Height, int Width)
+    private void ShowPath (int index, bool IsMinus)
     {
-        for (int y = 0; y < Width; y++)
+        CounterText.text = PathCounter++.ToString() + "/" + Paths.Count.ToString();
+        for (int pathTile = 0; pathTile > PathList[index].Count; pathTile++)
         {
-            for (int x = 0; x < Height; x++)
+            PathList[index][pathTile].GetComponent<SpriteRenderer>().enabled = true;
+            if (IsMinus)
+                PathList[index - 1][pathTile].GetComponent<SpriteRenderer>().enabled = false;
+            else
+                PathList[index + 1][pathTile].GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+
+    public void PreviousPath()
+    {
+        if(PathCounter > 0)
+        {
+            PathCounter--;
+            ShowPath(PathCounter, false);
+        }
+    }
+
+    public void NextPath()
+    {
+        if (PathCounter < Paths.Count)
+        {
+            PathCounter++;
+            ShowPath(PathCounter, true);
+        }
+    }
+
+    public void InstantiatePaths()
+    {
+        PathList = new List<List<GameObject>>();
+        for (int path = 0; path < this.Paths.Count; path++)
+        {
+            List<GameObject> pathList = new List<GameObject> ();
+            for (int y = 0; y < this.Width; y++)
             {
-                if (Routes.RoadGrid[x, y] == 1)
+                for (int x = 0; x < this.Height; x++)
                 {
-                    GameObject Road = Instantiate(TempRoad, new Vector3(x, -y), Quaternion.identity);
-                    Road.GetComponent<SpriteRenderer>().color = Color.grey;
-                    TempRoads.Add(Road);
-                }
-                else
-                {
-                    GameObject Road = Instantiate(TempRoad, new Vector3(x, -y), Quaternion.identity);
-                    Road.GetComponent<SpriteRenderer>().color = Color.green;
-                    TempRoads.Add(Road);
+                    if (Paths[path][x, y] == 1)
+                    {
+                        GameObject Road = Instantiate(TempRoad, new Vector3(x, -y), Quaternion.identity);
+                        Road.GetComponent<SpriteRenderer>().color = Color.grey;
+                        Road.GetComponent<SpriteRenderer>().enabled = false;
+                        pathList.Add(Road);
+                    }
                 }
             }
+            PathList.Add(pathList);
         }
     }
 
