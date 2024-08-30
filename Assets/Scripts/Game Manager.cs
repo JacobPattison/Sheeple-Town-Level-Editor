@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameObject TempRoad;
+
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private GameObject GridPrefab;
     [SerializeField] private GameObject LevelView;
@@ -30,11 +32,14 @@ public class GameManager : MonoBehaviour
     private bool IsTest;
     public bool IsMoveable;
     public bool IsEditor = true;
+    private bool IsPlacingStart;
 
     private Dictionary<int, Vector3> PresetRoadRotations;
     private Dictionary<Vector2, int> RoadOrientations;
 
     private TileType selectedTileType;
+
+    Routes Routes;
 
     #region Unity
 
@@ -61,6 +66,8 @@ public class GameManager : MonoBehaviour
         LevelView.GetComponent<LevelView>().width = this.Width;
         LevelView.GetComponent<LevelView>().height = this.Height;
         LevelView.GetComponent<LevelView>().UpdateBounds();
+
+        Routes = new Routes();
     }
 
     private void OnApplicationQuit()
@@ -508,29 +515,23 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region Routes
+    #region Routes Input
 
-    private bool IsPlacingStart;
-    private int StartX;
-    private int StartY;
-    private int EndX;
-    private int EndY;
-
-    private Tile[,] RoadTiles;
+    List<GameObject> TempRoads;
 
     private void PlacePoints (int x, int y)
     {
         if (IsPlacingStart)
         {
-            StartX = x;
-            StartY = y;
-            GameObject.Find("Start").transform.position = new Vector3(StartX, -StartY, 88);
+            Routes.StartX = x;
+            Routes.StartY = y;
+            GameObject.Find("Start").transform.position = new Vector3(x, -y, 88);
         }
         else
         {
-            EndX = x;
-            EndY = y;
-            GameObject.Find("End").transform.position = new Vector3(EndX, -EndY, 88);
+            Routes.EndX = x;
+            Routes.EndY = y;
+            GameObject.Find("End").transform.position = new Vector3(x, -y, 88);
         }
     }
 
@@ -562,7 +563,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowShortestPaths()
     {
-
+        
     }
 
     public void ShowLongestPaths()
@@ -572,13 +573,30 @@ public class GameManager : MonoBehaviour
 
     public void ShowAllPaths()
     {
-
+        Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
+        DebugRoadGrid(this.Height, this.Width);
     }
 
-
-    private void CalculatePaths()
+    public void DebugRoadGrid(int Height, int Width)
     {
-
+        for (int y = 0; y < Width; y++)
+        {
+            for (int x = 0; x < Height; x++)
+            {
+                if (Routes.RoadGrid[x, y] == 1)
+                {
+                    GameObject Road = Instantiate(TempRoad, new Vector3(x, -y), Quaternion.identity);
+                    Road.GetComponent<SpriteRenderer>().color = Color.grey;
+                    TempRoads.Add(Road);
+                }
+                else
+                {
+                    GameObject Road = Instantiate(TempRoad, new Vector3(x, -y), Quaternion.identity);
+                    Road.GetComponent<SpriteRenderer>().color = Color.green;
+                    TempRoads.Add(Road);
+                }
+            }
+        }
     }
 
     #endregion
