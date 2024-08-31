@@ -522,7 +522,7 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region Routes Input
+    #region Routes IO
 
     List<GameObject> TempRoads;
 
@@ -582,20 +582,28 @@ public class GameManager : MonoBehaviour
     {
         Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
         Paths = Routes.CalculatePaths();
+        PathList = new List<List<GameObject>>();
+        DisposePaths();
         InstantiatePaths();
-        ShowPath(PathCounter, false);
+        ShowPath(PathCounter);
     }
 
-    private void ShowPath (int index, bool IsMinus)
+    private void ShowPath (int index)
     {
-        CounterText.text = PathCounter++.ToString() + "/" + Paths.Count.ToString();
-        for (int pathTile = 0; pathTile > PathList[index].Count; pathTile++)
+        string counterText = (PathCounter + 1).ToString() + "/" + Paths.Count.ToString();
+        CounterText.text = counterText;
+        for (int pathTile = 0; pathTile < PathList[index].Count; pathTile++)
         {
             PathList[index][pathTile].GetComponent<SpriteRenderer>().enabled = true;
-            if (IsMinus)
-                PathList[index - 1][pathTile].GetComponent<SpriteRenderer>().enabled = false;
-            else
-                PathList[index + 1][pathTile].GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+    private void HidePath(int index)
+    {
+        string counterText = (PathCounter + 1).ToString() + "/" + Paths.Count.ToString();
+        CounterText.text = counterText;
+        for (int pathTile = 0; pathTile < PathList[index].Count; pathTile++)
+        {
+            PathList[index][pathTile].GetComponent<SpriteRenderer>().enabled = false;
         }
     }
 
@@ -604,22 +612,23 @@ public class GameManager : MonoBehaviour
         if(PathCounter > 0)
         {
             PathCounter--;
-            ShowPath(PathCounter, false);
+            ShowPath(PathCounter);
+            HidePath(PathCounter + 1);
         }
     }
 
     public void NextPath()
     {
-        if (PathCounter < Paths.Count)
+        if (PathCounter < Paths.Count - 1)
         {
             PathCounter++;
-            ShowPath(PathCounter, true);
+            ShowPath(PathCounter);
+            HidePath(PathCounter - 1);
         }
     }
 
-    public void InstantiatePaths()
+    private void InstantiatePaths()
     {
-        PathList = new List<List<GameObject>>();
         for (int path = 0; path < this.Paths.Count; path++)
         {
             List<GameObject> pathList = new List<GameObject> ();
@@ -629,7 +638,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (Paths[path][x, y] == 1)
                     {
-                        GameObject Road = Instantiate(TempRoad, new Vector3(x, -y), Quaternion.identity);
+                        GameObject Road = Instantiate(TempRoad, new Vector3(x, -y, 84), Quaternion.identity);
                         Road.GetComponent<SpriteRenderer>().color = Color.grey;
                         Road.GetComponent<SpriteRenderer>().enabled = false;
                         pathList.Add(Road);
@@ -637,6 +646,18 @@ public class GameManager : MonoBehaviour
                 }
             }
             PathList.Add(pathList);
+        }
+    }
+
+    private void DisposePaths()
+    {
+        if (!(PathList.Count > 0)) return;
+        for (int path = 0; path < this.Paths.Count; path++)
+        {
+            foreach (GameObject pathGameObject in this.PathList[path])
+            {
+                Destroy(pathGameObject);
+            }
         }
     }
 
