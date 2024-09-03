@@ -15,7 +15,7 @@ public class Routes
 
     public void AbstractRoadTiles(List<GameObject> Tiles, int Height, int Width)
     {
-        RoadGrid = new int[Height, Width];
+        RoadGrid = new int[Width, Height];
 
         for (int y = 0; y < Height; y++)
         {

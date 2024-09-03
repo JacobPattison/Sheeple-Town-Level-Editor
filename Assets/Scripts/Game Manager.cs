@@ -555,6 +555,11 @@ public class GameManager : MonoBehaviour
             EditorUI.SetActive(true);
             RoutesUI.SetActive(false);
             IsEditor = true;
+            DisposePaths();
+            HidePoints();
+            CounterText.text = "0/0";
+            PathList.Clear();
+            PathCounter = 0;
         }
     }
 
@@ -568,12 +573,28 @@ public class GameManager : MonoBehaviour
         IsPlacingStart = false;
     }
 
+    private void HidePoints ()
+    {
+        GameObject.Find("Start").transform.position = new Vector3(-20, 15, 88);
+        GameObject.Find("End").transform.position = new Vector3(-20, 15, 88);
+    }
+
     public void ShowShortestPaths()
     {
         
     }
 
     public void ShowLongestPaths()
+    {
+        Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
+        Paths = Routes.CalculatePaths();
+        
+        DisposePaths();
+        InstantiatePaths();
+        ShowPath(PathCounter);
+    }
+
+    private List<List<GameObject>> GetLongestPaths
     {
 
     }
@@ -582,7 +603,6 @@ public class GameManager : MonoBehaviour
     {
         Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
         Paths = Routes.CalculatePaths();
-        PathList = new List<List<GameObject>>();
         DisposePaths();
         InstantiatePaths();
         ShowPath(PathCounter);
@@ -632,14 +652,13 @@ public class GameManager : MonoBehaviour
         for (int path = 0; path < this.Paths.Count; path++)
         {
             List<GameObject> pathList = new List<GameObject> ();
-            for (int y = 0; y < this.Width; y++)
+            for (int y = 0; y < this.Height; y++)
             {
-                for (int x = 0; x < this.Height; x++)
+                for (int x = 0; x < this.Width; x++)
                 {
                     if (Paths[path][x, y] == 1)
                     {
                         GameObject Road = Instantiate(TempRoad, new Vector3(x, -y, 84), Quaternion.identity);
-                        Road.GetComponent<SpriteRenderer>().color = Color.grey;
                         Road.GetComponent<SpriteRenderer>().enabled = false;
                         pathList.Add(Road);
                     }
@@ -651,14 +670,19 @@ public class GameManager : MonoBehaviour
 
     private void DisposePaths()
     {
-        if (!(PathList.Count > 0)) return;
-        for (int path = 0; path < this.Paths.Count; path++)
+        if (PathList == null)
+        {
+            PathList = new List<List<GameObject>>();
+            return;
+        }
+        for (int path = 0; path < this.PathList.Count; path++)
         {
             foreach (GameObject pathGameObject in this.PathList[path])
             {
                 Destroy(pathGameObject);
             }
         }
+        PathList = new List<List<GameObject>>();
     }
 
     #endregion
