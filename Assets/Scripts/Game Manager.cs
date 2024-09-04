@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -588,15 +589,33 @@ public class GameManager : MonoBehaviour
     {
         Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
         Paths = Routes.CalculatePaths();
-        
         DisposePaths();
         InstantiatePaths();
         ShowPath(PathCounter);
     }
 
-    private List<List<GameObject>> GetLongestPaths
+    private List<List<GameObject>> GetLongestPaths ()
     {
+        int maxLength = 0;
+        foreach (List<GameObject> list in this.PathList)
+        {
+            if (list.Count > maxLength)
+            {
+                maxLength = list.Count;
+            }
+        }
 
+        // Step 2: Collect all lists that have the maximum length
+        List<List<GameObject>> longestLists = new List<List<GameObject>>();
+        foreach (List<GameObject> list in this.PathList)
+        {
+            if (list.Count == maxLength)
+            {
+                longestLists.Add(list);
+            }
+        }
+
+        return longestLists;
     }
 
     public void ShowAllPaths()
