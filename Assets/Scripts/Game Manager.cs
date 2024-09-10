@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using System.Xml;
 
 public class GameManager : MonoBehaviour
 {
@@ -582,44 +583,105 @@ public class GameManager : MonoBehaviour
 
     public void ShowShortestPaths()
     {
-        
-    }
-
-    public void ShowLongestPaths()
-    {
+        PathCounter = 0;
         Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
-        Paths = Routes.CalculatePaths();
+        Paths = GetShortestPaths();
         DisposePaths();
         InstantiatePaths();
         ShowPath(PathCounter);
     }
 
-    private List<List<GameObject>> GetLongestPaths ()
+    private List<int[,]> GetShortestPaths()
     {
-        int maxLength = 0;
-        foreach (List<GameObject> list in this.PathList)
+        List<int[,]> allPaths = Routes.CalculatePaths();
+        Dictionary<int, int> lengths = new Dictionary<int, int>();
+
+        for (int path = 0; path < allPaths.Count; path++)
         {
-            if (list.Count > maxLength)
+            int length = 0;
+            for (int y = 0; y < this.Height; y++)
             {
-                maxLength = list.Count;
+                for (int x = 0; x < this.Width; x++)
+                {
+                    if (allPaths[path][x, y] == 1)
+                        length++;
+                }
+            }
+            lengths.Add(path, length);
+        }
+
+        List<int> shortestIndices = new List<int>();
+        int smallestValue = lengths.Values.Min();
+
+        foreach (KeyValuePair<int, int> pair in lengths)
+        {
+            if (pair.Value == smallestValue)
+            {
+                shortestIndices.Add(pair.Key);
             }
         }
 
-        // Step 2: Collect all lists that have the maximum length
-        List<List<GameObject>> longestLists = new List<List<GameObject>>();
-        foreach (List<GameObject> list in this.PathList)
+        List<int[,]> shortestPaths = new List<int[,]>();
+        foreach (int index in shortestIndices)
         {
-            if (list.Count == maxLength)
+            shortestPaths.Add(allPaths[index]);
+        }
+
+        return shortestPaths;
+    }
+
+    public void ShowLongestPaths()
+    {
+        PathCounter = 0;
+        Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
+        Paths = GetLongestPaths();
+        DisposePaths();
+        InstantiatePaths();
+        ShowPath(PathCounter);
+    }
+
+    private List<int[,]> GetLongestPaths ()
+    {
+        List<int[,]> allPaths = Routes.CalculatePaths();
+        Dictionary<int, int> lengths = new Dictionary<int, int>();
+
+        for (int path = 0; path < allPaths.Count; path++)
+        {
+            int length = 0;
+            for (int y = 0; y < this.Height; y++)
             {
-                longestLists.Add(list);
+                for (int x = 0; x < this.Width; x++)
+                {
+                    if (allPaths[path][x, y] == 1)
+                        length++;
+                }
+            }
+            lengths.Add(path, length);
+        }
+
+        List<int> longestIndices = new List<int>();
+        int largestValue = lengths.Values.Max();
+
+        foreach (KeyValuePair<int, int> pair in lengths)
+        {
+            if (pair.Value == largestValue)
+            {
+                longestIndices.Add(pair.Key);
             }
         }
 
-        return longestLists;
+        List<int[,]> longestPaths = new List<int[,]>();
+        foreach (int index in longestIndices)
+        {
+            longestPaths.Add(allPaths[index]);
+        }
+
+        return longestPaths;
     }
 
     public void ShowAllPaths()
     {
+        PathCounter = 0;
         Routes.AbstractRoadTiles(this.Tiles, this.Height, this.Width);
         Paths = Routes.CalculatePaths();
         DisposePaths();
