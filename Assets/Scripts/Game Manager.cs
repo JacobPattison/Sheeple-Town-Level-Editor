@@ -465,12 +465,15 @@ public class GameManager : MonoBehaviour
         {
             case 0:
                 this.selectedTileType = TileType.Grass;
+                Debug.Log("Selected Tile Changed: Grass");
                 return;
             case 1:
                 this.selectedTileType = TileType.Building;
+                Debug.Log("Selected Tile Changed: Building");
                 return;
             case 2:
                 this.selectedTileType = TileType.Road;
+                Debug.Log("Selected Tile Changed: Road");
                 return;
         };
     }
@@ -500,6 +503,7 @@ public class GameManager : MonoBehaviour
         SaveLevel();
         UnityEditor.EditorApplication.ExitPlaymode();
         Application.Quit();
+        Debug.Log("Application Quit");
     }
     public void ToggleGridOutline()
     {

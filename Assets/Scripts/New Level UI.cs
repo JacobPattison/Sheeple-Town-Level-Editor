@@ -50,6 +50,7 @@ public class NewLevelUI : MonoBehaviour
         PlayerPrefs.SetString("SavePath", path);
 
         SceneManager.LoadScene("LevelEditor");
+        Debug.Log($"New Level Created: {levelName}, {levelWidth}, {levelHeight}");
     }
 
     public void Close()
