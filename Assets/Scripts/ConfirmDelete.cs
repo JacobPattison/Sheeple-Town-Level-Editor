@@ -8,7 +8,7 @@ public class ConfirmDelete : MonoBehaviour
     public GameObject level;
     public string Path;
 
-
+    
     public void ConfirmDeleteLevel()
     {
         Debug.Log("Deleted Level: " + this.Path);
