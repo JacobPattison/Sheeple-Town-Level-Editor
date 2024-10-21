@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour
         gameManager = gameManagerFind.GetComponent<GameManager>();
     }
 
+    // When mouse is pressed the tile coordinates is passed to the GM to change the tile
     private void OnMouseDown()
     {
         if (Input.GetMouseButtonDown(0)) // Left Click

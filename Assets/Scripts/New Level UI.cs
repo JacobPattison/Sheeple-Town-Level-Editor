@@ -14,6 +14,7 @@ public class NewLevelUI : MonoBehaviour
 
     private string LevelDirectory = Application.dataPath + "/Levels/";
 
+    // Gets user input, creates new level with input and loads the editor
     public void CreateNewLevel ()
     {
         string levelName = NameInputField.text;
@@ -53,6 +54,7 @@ public class NewLevelUI : MonoBehaviour
         Debug.Log($"New Level Created: {levelName}, {levelWidth}, {levelHeight}");
     }
 
+    // Closes down the UI
     public void Close()
     {
         Destroy(this.gameObject);

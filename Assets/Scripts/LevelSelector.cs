@@ -26,6 +26,7 @@ public class LevelSelector : MonoBehaviour
         PlayerPrefs.DeleteAll();
     }
 
+    // Loads all levels into from directory, creating a prefab for each with name, thumbnail and level path
     private void LoadLevels()
     {
         string[] allPaths = Directory.GetFiles(LevelDirectory); // Gets all files, including meta files
@@ -63,6 +64,7 @@ public class LevelSelector : MonoBehaviour
         LevelList[levelIndex].GetComponent<Level>().IsNewLevel = true;
     }
 
+    // Moves the levels with scroll wheel
     private void UpdateScrollTransform()
     {
         GameObject newLevelUI = GameObject.Find("New Level(Clone)");
@@ -78,6 +80,7 @@ public class LevelSelector : MonoBehaviour
         LevelsTransform.offsetMin = offsetMin;
     }
 
+    // Closes application
     public void Exit()
     {
         Debug.Log("Application Quit");

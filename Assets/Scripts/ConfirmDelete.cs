@@ -8,7 +8,7 @@ public class ConfirmDelete : MonoBehaviour
     public GameObject level;
     public string Path;
 
-    
+    // Deletes the level with is meta data
     public void ConfirmDeleteLevel()
     {
         Debug.Log("Deleted Level: " + this.Path);
@@ -23,6 +23,7 @@ public class ConfirmDelete : MonoBehaviour
         Destroy(this.level);
     }
 
+    // Doesnt delete level, closes connfirm UI
     public void DeclineDeleteLevel()
     {
         Destroy(this.gameObject);

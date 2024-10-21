@@ -31,6 +31,7 @@ public class Routes
         }
     }
 
+    // Vectors for pathfinding
     private static readonly int[][] Directions = new int[][]
     {
         new int[] {-1, 0},  // up
@@ -39,6 +40,7 @@ public class Routes
         new int[] {0, 1}    // right
     };
 
+    // Depth first search algorithm that returns a 2d array of ints, 1 being road, 0 being not road
     public List<int[,]> CalculatePaths()
     {
         int rows = this.RoadGrid.GetLength(0);

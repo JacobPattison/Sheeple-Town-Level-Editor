@@ -14,6 +14,7 @@ public class LevelView : MonoBehaviour
     private bool isPanning = false;
     private Vector3 lastPanPosition;
 
+    // Calulates the bounds for the camera using the level dimentions and view dimentions
     public void UpdateBounds()
     {
         minX = 8.4f;
@@ -61,6 +62,7 @@ public class LevelView : MonoBehaviour
         }
     }
 
+    // Moves camera based on mouse movements
     void PanCamera()
     {
         if (!isPanning) return;

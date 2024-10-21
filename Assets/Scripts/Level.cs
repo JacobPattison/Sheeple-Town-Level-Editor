@@ -27,6 +27,7 @@ public class Level : MonoBehaviour
                 InstantiateNewLevelUI();
     }
 
+    // Loads level or new level UI
     private void OnMouseDown()
     {
         if (IsNewLevel)
@@ -45,6 +46,7 @@ public class Level : MonoBehaviour
         Instantiate(NewLevelUIPrefab, GameObject.Find("Level Selector").transform);
     }
 
+    // Spawns the confirm delete UI
     public void SpawnConfirmDeleteUI()
     {
         Transform levelEditor = GameObject.Find("Level Selector").transform;

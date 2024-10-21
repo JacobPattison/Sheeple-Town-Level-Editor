@@ -117,6 +117,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // Gets level data from save path passed by level selector
     private void LoadLevel()
     {
         string[] levelData = File.ReadAllLines(SavePath);
@@ -176,6 +177,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Takes cameras texture and saves it as a png with the same name as level
     private void SaveThumbnail()
     {
         if (IsTest) return;
@@ -199,6 +201,7 @@ public class GameManager : MonoBehaviour
 
     #region Instantiates
 
+    // Checks save path for the file, if found it will load level if not it will generate a new grid with player preferences data
     private void CheckExistingLevel()
     {
         if (PlayerPrefs.HasKey("SavePath"))
@@ -229,6 +232,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Dictionary for all of the road rotations, this is what my algorithm uses as look up table to calculate the correct road tile
     private void InstantiatePresetRoadRotations()
     {
         PresetRoadRotations = new Dictionary<int, Vector3>();
@@ -259,7 +263,6 @@ public class GameManager : MonoBehaviour
 
         // Four Roads
         PresetRoadRotations.Add(120, new Vector3(0, 90, 0));
-
     }
 
     private void GenerateGrid()
@@ -281,6 +284,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Creates the outline using sprite prefab
     private void GenerateGridOutline()
     {
         int vertLines = this.Width - 1;
@@ -289,6 +293,7 @@ public class GameManager : MonoBehaviour
         float verticalOffSet = 0;
         float horizontalOffSet = 0;
 
+        // Offset because of centre orientation
         if (this.Height % 2 == 0)
             verticalOffSet = 0.5f;
 
@@ -317,6 +322,7 @@ public class GameManager : MonoBehaviour
 
     #region Tile Changing
 
+    // Changes the tiles
     public void ChangeTile (int x, int y)
     {
         TileType currentTileType = Tiles[((y) * this.Width) + x].GetComponent<Tile>().tileType;
@@ -346,7 +352,7 @@ public class GameManager : MonoBehaviour
         TileType neighbouringTileType;
 
         // Checks each neighbouring tile veritcally and horizontically, if its a road then update it
-        if (y + 1 < this.Height) // Up + y
+        if (y + 1 < this.Height) // Up + y region
         {
             neighbouringTileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
             if (neighbouringTileType == TileType.Road)
@@ -354,7 +360,7 @@ public class GameManager : MonoBehaviour
                 UpdateRoad(x, y + 1);
             }
         }
-        if (x + 1 < this.Width) // Right + x
+        if (x + 1 < this.Width) // Right + x region
         {
             neighbouringTileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
             if (neighbouringTileType == TileType.Road)
@@ -362,7 +368,7 @@ public class GameManager : MonoBehaviour
                 UpdateRoad(x + 1, y);
             }
         }
-        if (y - 1 >= 0) // Down - y
+        if (y - 1 >= 0) // Down - y region
         {
             neighbouringTileType = Tiles[((y - 1) * this.Width) + x].GetComponent<Tile>().tileType;
             if (neighbouringTileType == TileType.Road)
@@ -370,7 +376,7 @@ public class GameManager : MonoBehaviour
                 UpdateRoad(x, y - 1);
             }
         }
-        if (x - 1 >= 0) // Left - x
+        if (x - 1 >= 0) // Left - x region
         {
             neighbouringTileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
             if (neighbouringTileType == TileType.Road)
@@ -397,7 +403,7 @@ public class GameManager : MonoBehaviour
                 rotationIndex *= 2;
             }
         }
-        if (x + 1 < this.Width) // Right + x
+        if (x + 1 < this.Width) // Right + x region
         {
             neighbouringTileType = Tiles[(y * this.Width) + x + 1].GetComponent<Tile>().tileType;
             if (neighbouringTileType == TileType.Road)
@@ -405,7 +411,7 @@ public class GameManager : MonoBehaviour
                 rotationIndex *= 3;
             }
         }
-        if (y + 1 < this.Height) // Down + y
+        if (y + 1 < this.Height) // Down + y region
         {
             neighbouringTileType = Tiles[((y + 1) * this.Width) + x].GetComponent<Tile>().tileType;
             if (neighbouringTileType == TileType.Road)
@@ -413,7 +419,7 @@ public class GameManager : MonoBehaviour
                 rotationIndex *= 4;
             }
         }
-        if (x - 1 >= 0) // Left - x
+        if (x - 1 >= 0) // Left - x region
         {
             neighbouringTileType = Tiles[(y * this.Width) + x - 1].GetComponent<Tile>().tileType;
             if (neighbouringTileType == TileType.Road)
@@ -435,6 +441,7 @@ public class GameManager : MonoBehaviour
         ChangeTileOrientation(x, y, key,  rotation);
     }
 
+    // Changes the enum that the tile has
     private void ChangeTileType(TileType tileType, int x, int y)
     {
         int listIndex = y * this.Width + x;
@@ -442,6 +449,7 @@ public class GameManager : MonoBehaviour
         tileComponent.tileType = tileType;
     }
 
+    // Changes the orientation of the tile game object, this is what uses the look up table
     private void ChangeTileOrientation (int x, int y, int key, Vector3 rotation)
     {
         RoadOrientations[new Vector2(x, y)] = key;
@@ -459,6 +467,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Changes the tile that user is going to place
     public void ChangeSelectedTileType(int type)
     {
         switch (type)
@@ -482,6 +491,7 @@ public class GameManager : MonoBehaviour
 
     #region UI
 
+    // Sends user to the level selector
     public void ReturnToLevelSelector()
     {
         SaveThumbnail();
@@ -489,6 +499,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("LevelSelector");
     }
 
+    // Sends user to the level selector with the new level ui open
     public void CreateNewLevelUI()
     {
         SaveThumbnail();
@@ -497,6 +508,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("LevelSelector");
     }
 
+    // Saves the level and closes the application
     public void Exit()
     {
         SaveThumbnail();
@@ -505,6 +517,8 @@ public class GameManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Application Quit");
     }
+
+    // Enables and disables the grid outline
     public void ToggleGridOutline()
     {
         if (GridActive)
@@ -532,6 +546,7 @@ public class GameManager : MonoBehaviour
 
     List<GameObject> TempRoads;
 
+    // Updates the stored marker positions, moves marker game object
     private void PlacePoints (int x, int y)
     {
         if (IsPlacingStart)
@@ -548,6 +563,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Toggles the logic for placing tiles, clears paths and switchs the top bar UI
     public void ToggleRoutes()
     {
         if (IsEditor)
@@ -569,6 +585,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Updates whether user is placing starting marker or ending marker
     public void StartRoute()
     {
         IsPlacingStart = true;
@@ -579,12 +596,14 @@ public class GameManager : MonoBehaviour
         IsPlacingStart = false;
     }
 
+    // Resets marker game objects position, hides them out of camera view
     private void HidePoints ()
     {
         GameObject.Find("Start").transform.position = new Vector3(-20, 15, 88);
         GameObject.Find("End").transform.position = new Vector3(-20, 15, 88);
     }
 
+    // Resets path counter, gets the just the road tiles, gets shortests paths (2D int array), disposes of old path game objects, creates new game objects shows the first path
     public void ShowShortestPaths()
     {
         PathCounter = 0;
@@ -595,6 +614,7 @@ public class GameManager : MonoBehaviour
         ShowPath(PathCounter);
     }
 
+    // Gets all of the paths, goes through them all tallying the length of them, gets the shortest(s) ones and returns it
     private List<int[,]> GetShortestPaths()
     {
         List<int[,]> allPaths = Routes.CalculatePaths();
@@ -634,6 +654,7 @@ public class GameManager : MonoBehaviour
         return shortestPaths;
     }
 
+    // Resets path counter, gets the just the road tiles, gets longest paths (2D int array), disposes of old path game objects, creates new game objects shows the first path
     public void ShowLongestPaths()
     {
         PathCounter = 0;
@@ -644,6 +665,7 @@ public class GameManager : MonoBehaviour
         ShowPath(PathCounter);
     }
 
+    // Gets all of the paths, goes through them all tallying the length of them, gets the longest(s) ones and returns it
     private List<int[,]> GetLongestPaths ()
     {
         List<int[,]> allPaths = Routes.CalculatePaths();
@@ -683,6 +705,7 @@ public class GameManager : MonoBehaviour
         return longestPaths;
     }
 
+    // Resets path counter, gets the just the road tiles, gets all the paths, disposes of old path game objects, creates new game objects shows the first path
     public void ShowAllPaths()
     {
         PathCounter = 0;
@@ -693,6 +716,7 @@ public class GameManager : MonoBehaviour
         ShowPath(PathCounter);
     }
 
+    // Updates counter text, enables sprite renderer for current path
     private void ShowPath (int index)
     {
         string counterText = (PathCounter + 1).ToString() + "/" + Paths.Count.ToString();
@@ -702,6 +726,8 @@ public class GameManager : MonoBehaviour
             PathList[index][pathTile].GetComponent<SpriteRenderer>().enabled = true;
         }
     }
+
+    // Updates counter text, disables sprite renderer for current path
     private void HidePath(int index)
     {
         string counterText = (PathCounter + 1).ToString() + "/" + Paths.Count.ToString();
@@ -712,6 +738,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Shows previous path
     public void PreviousPath()
     {
         if(PathCounter > 0)
@@ -722,6 +749,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Shows next path
     public void NextPath()
     {
         if (PathCounter < Paths.Count - 1)
@@ -732,6 +760,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Create all of the game objects for the paths
     private void InstantiatePaths()
     {
         for (int path = 0; path < this.Paths.Count; path++)
@@ -753,6 +782,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Disposes of the path game objects
     private void DisposePaths()
     {
         if (PathList == null)
